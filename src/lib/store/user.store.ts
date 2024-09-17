@@ -9,11 +9,13 @@ export interface UserState {
 }
 
 const userStore: (s: StoreApi<UserState>['setState']) => UserState = (set) => ({
-  login: (user) => set((s) => ({...s, user: user})),
+  login: (user) => set(
+    (s) => ({ ...s, user: user })
+  ),
   logout: () => {
-    set((s) => ({ ...s, user:undefined }))
-    location.href = "/";
-    location.reload();
+    set(
+      (s) => ({ ...s, user: undefined })
+    )
   }
 });
 

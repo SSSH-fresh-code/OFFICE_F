@@ -14,10 +14,18 @@ interface SignUpProps {
 
 function SignUp({ changeMode }: SignUpProps) {
   const signUpSchema = z.object({
-    email: z.string().email(),
-    password: z.string().min(6),
-    passwordRe: z.string().min(6),
-    name: z.string().min(2)
+    email: z.string().email("올바른 이메일 형식을 입력해주세요."),
+    password: z.string().min(4, "비밀번호는 4자 이상이어야 합니다."),
+    passwordRe: z.string().min(4, "비밀번호는 4자 이상이어야 합니다."),
+    name: z.string().min(2, "이름은 2자 이상이어야 합니다.")
+  }).superRefine(({ passwordRe, password }, ctx) => {
+    if (passwordRe !== password) {
+      ctx.addIssue({
+        code: "custom",
+        message: "비밀번호가 일치하지 않습니다.",
+        path: ['passwordRe']
+      });
+    }
   });
 
   const form = useForm<z.infer<typeof signUpSchema>>({

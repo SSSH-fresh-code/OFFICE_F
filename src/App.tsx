@@ -1,8 +1,9 @@
 import { Outlet, useNavigate } from "@tanstack/react-router";
 import { Menu } from "lucide-react";
-import { Sheet, SheetContent, SheetTrigger } from "./components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "./components/ui/sheet";
 import { Button } from "./components/ui/button";
 import useUserStore from "./lib/store/user.store";
+import { Separator } from "./components/ui/separator";
 
 function App() {
   const navigate = useNavigate();
@@ -25,12 +26,22 @@ function App() {
               <Menu className="cursor-pointer" />
             </SheetTrigger>
             <SheetContent className="bg-white pt-10">
+              <SheetHeader>
+                <SheetTitle />
+              </SheetHeader>
+              <Button
+                className="w-full"
+                variant="link"
+                onClick={() => navigate({ to: "topic" })}
+              >
+                주제
+              </Button>
+              <Separator />
               <Button className="w-full" variant="link" onClick={() => logout()}>로그아웃</Button>
-
             </SheetContent>
           </Sheet>
         </div>
-      </header>
+      </header >
       <div className="p-2 md:p-4">
         <Outlet />
       </div>

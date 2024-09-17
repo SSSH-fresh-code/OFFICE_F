@@ -1,10 +1,13 @@
-import { createRootRoute } from "@tanstack/react-router";
+import { createRootRouteWithContext } from "@tanstack/react-router";
 import App from "@/App";
 import useUserStore from "@/lib/store/user.store";
 import GuestApp from "@/components/guest/guest-app";
+import { QueryClient } from "@tanstack/react-query";
 
-export const Route = createRootRoute({
-  component: () => <Root />,
+export const Route = createRootRouteWithContext<{
+  queryClient: QueryClient
+}>()({
+  component: Root
 });
 
 function Root() {

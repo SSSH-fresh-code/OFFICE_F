@@ -15,8 +15,8 @@ interface LoginProps {
 
 function SignIn({ login, changeMode }: LoginProps) {
   const loginSchema = z.object({
-    email: z.string().email(),
-    password: z.string().min(4)
+    email: z.string().email("올바른 이메일 형식을 입력해주세요."),
+    password: z.string().min(4, "비밀번호는 4자 이상이어야 합니다.")
   });
 
   const form = useForm<z.infer<typeof loginSchema>>({

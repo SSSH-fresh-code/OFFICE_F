@@ -12,11 +12,17 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index.route'
+import { Route as TopicIndexRouteImport } from './routes/topic/index.route'
 
 // Create/Update Routes
 
 const IndexRouteRoute = IndexRouteImport.update({
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const TopicIndexRouteRoute = TopicIndexRouteImport.update({
+  path: '/topic/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -31,6 +37,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRoute
     }
+    '/topic/': {
+      id: '/topic/'
+      path: '/topic'
+      fullPath: '/topic'
+      preLoaderRoute: typeof TopicIndexRouteImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -38,32 +51,37 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRouteRoute
+  '/topic': typeof TopicIndexRouteRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRouteRoute
+  '/topic': typeof TopicIndexRouteRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRouteRoute
+  '/topic/': typeof TopicIndexRouteRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/topic'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/topic'
+  id: '__root__' | '/' | '/topic/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRouteRoute: typeof IndexRouteRoute
+  TopicIndexRouteRoute: typeof TopicIndexRouteRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRouteRoute: IndexRouteRoute,
+  TopicIndexRouteRoute: TopicIndexRouteRoute,
 }
 
 export const routeTree = rootRoute
@@ -78,11 +96,15 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/"
+        "/",
+        "/topic/"
       ]
     },
     "/": {
       "filePath": "index.route.tsx"
+    },
+    "/topic/": {
+      "filePath": "topic/index.route.tsx"
     }
   }
 }
