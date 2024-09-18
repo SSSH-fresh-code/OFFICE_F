@@ -6,6 +6,7 @@ import { convertUnderbar, Page, PageInfo, ReadTopicDto } from 'sssh-library';
 import { useReactTable, ColumnDef, getCoreRowModel, flexRender } from "@tanstack/react-table"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
+import { Button } from '@/components/ui/button';
 
 export const Route = createFileRoute('/topic/')({
   validateSearch: (search: Record<string, unknown>) =>
@@ -18,7 +19,7 @@ export const Route = createFileRoute('/topic/')({
       direction: "desc"
     }
 
-    if (like__name !== "undefined") {
+    if (like__name !== "undefined" && like__name !== undefined) {
       dto["like__name"] = String(like__name);
     }
 
@@ -27,7 +28,8 @@ export const Route = createFileRoute('/topic/')({
   loader: async ({ deps, context: { queryClient } }) => {
     const postsQueryOptions = queryOptions({
       queryKey: ['topics', String(deps.page)],
-      queryFn: () => req<Page<ReadTopicDto>>('topic', 'get', deps)
+      queryFn: () => req<Page<ReadTopicDto>>('topic', 'get', deps),
+      staleTime: 3000
     });
 
     return await queryClient.ensureQueryData(postsQueryOptions);
@@ -47,11 +49,15 @@ function TopicList() {
   }, [success, data])
 
 
-  return <TopicDataTable topics={topics} />;
+  return (
+    <TopicDataTable topics={topics} />
+  );
 }
 
 
 function TopicDataTable({ topics }: { topics?: Page<ReadTopicDto> }) {
+  const navigate = useNavigate();
+
   const columns: ColumnDef<ReadTopicDto>[] = [
     {
       accessorKey: "name",
@@ -60,7 +66,8 @@ function TopicDataTable({ topics }: { topics?: Page<ReadTopicDto> }) {
     },
     {
       accessorKey: "createdAt",
-      header: "생성일시"
+      header: "생성일시",
+      accessorFn: (value) => new Date(value.createdAt).toLocaleString()
     }
   ];
 
@@ -69,8 +76,38 @@ function TopicDataTable({ topics }: { topics?: Page<ReadTopicDto> }) {
     key: "name"
   }
 
+  return (
+    <>
+      <DataTableHeader info={topics?.info}>
+        <Button
+          variant="outline"
+          className="font-bold"
+          onClick={() => { navigate({ to: "/topic/new" }) }}
+        >
+          추가
+        </Button>
+      </DataTableHeader >
+      <DataTableBody columns={columns} data={topics} options={options} />
+    </>
+  )
+}
 
-  return <DataTable columns={columns} data={topics} options={options} />
+function DataTableHeader({ info, children }: {
+  info?: PageInfo;
+  children?: JSX.Element
+}) {
+  if (!info) return <></>;
+
+  const { last, current, take } = info;
+  return (
+    <div className="flex justify-between items-end mb-3">
+      <span className="text-[10px] text-gray-300">총 {last} 페이지 중 {current}, {take}개씩 조회</span>
+      <div>
+        {children}
+      </div>
+    </div>
+  )
+
 }
 
 interface DataTableOptions<TData> {
@@ -78,15 +115,15 @@ interface DataTableOptions<TData> {
   key?: keyof TData
 }
 
-interface DataTableProps<TData, TValue> {
+interface DataTableBodyProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data?: Page<TData>
   options: DataTableOptions<TData>
 }
 
-function DataTable<TData, TValue>({
+function DataTableBody<TData, TValue>({
   columns, data: { data, info } = { data: [], info: { current: 1, last: 1, total: 0, take: 10 } }, options
-}: DataTableProps<TData, TValue>) {
+}: DataTableBodyProps<TData, TValue>) {
   const navigate = useNavigate();
 
   const table = useReactTable({
@@ -159,7 +196,7 @@ function DataTablePagination({ info, href }: { info: PageInfo, href: string }) {
 
   const isLast = current === last;
   const hasNext = current < last;
-  const isFirst = !isLast && current === 1;
+  const isFirst = isLast && current === 1;
 
   return (
     <div className="mt-3">
@@ -174,7 +211,10 @@ function DataTablePagination({ info, href }: { info: PageInfo, href: string }) {
             [current - 1, current, current + 1]
               .filter(i => i > 0 && i <= last)
               .map(i => (
-                <PaginationItem className={(i === current ? "bg-gray-200 font-bold" : "") + " rounded-md hover:bg-gray-200 p-0.5"}>
+                <PaginationItem
+                  key={`page-${i}`}
+                  className={(i === current ? "bg-gray-200 font-bold" : "") + " rounded-md hover:bg-gray-200 p-0.5"}
+                >
                   <PaginationLink href={`${href}?page=${i}`}>{i}</PaginationLink>
                 </PaginationItem>
               ))
