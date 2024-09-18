@@ -32,7 +32,7 @@ function App() {
               <Button
                 className="w-full"
                 variant="link"
-                onClick={() => navigate({ to: "topic" })}
+                onClick={() => navigate({ to: "/topic" })}
               >
                 주제
               </Button>

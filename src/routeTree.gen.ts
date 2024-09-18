@@ -13,6 +13,8 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index.route'
 import { Route as TopicIndexRouteImport } from './routes/topic/index.route'
+import { Route as TopicNewIndexRouteImport } from './routes/topic/new/index.route'
+import { Route as TopicNameIndexRouteImport } from './routes/topic/$name/index.route'
 
 // Create/Update Routes
 
@@ -23,6 +25,16 @@ const IndexRouteRoute = IndexRouteImport.update({
 
 const TopicIndexRouteRoute = TopicIndexRouteImport.update({
   path: '/topic/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const TopicNewIndexRouteRoute = TopicNewIndexRouteImport.update({
+  path: '/topic/new/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const TopicNameIndexRouteRoute = TopicNameIndexRouteImport.update({
+  path: '/topic/$name/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -44,6 +56,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TopicIndexRouteImport
       parentRoute: typeof rootRoute
     }
+    '/topic/$name/': {
+      id: '/topic/$name/'
+      path: '/topic/$name'
+      fullPath: '/topic/$name'
+      preLoaderRoute: typeof TopicNameIndexRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/topic/new/': {
+      id: '/topic/new/'
+      path: '/topic/new'
+      fullPath: '/topic/new'
+      preLoaderRoute: typeof TopicNewIndexRouteImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -52,36 +78,46 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRouteRoute
   '/topic': typeof TopicIndexRouteRoute
+  '/topic/$name': typeof TopicNameIndexRouteRoute
+  '/topic/new': typeof TopicNewIndexRouteRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRouteRoute
   '/topic': typeof TopicIndexRouteRoute
+  '/topic/$name': typeof TopicNameIndexRouteRoute
+  '/topic/new': typeof TopicNewIndexRouteRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRouteRoute
   '/topic/': typeof TopicIndexRouteRoute
+  '/topic/$name/': typeof TopicNameIndexRouteRoute
+  '/topic/new/': typeof TopicNewIndexRouteRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/topic'
+  fullPaths: '/' | '/topic' | '/topic/$name' | '/topic/new'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/topic'
-  id: '__root__' | '/' | '/topic/'
+  to: '/' | '/topic' | '/topic/$name' | '/topic/new'
+  id: '__root__' | '/' | '/topic/' | '/topic/$name/' | '/topic/new/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRouteRoute: typeof IndexRouteRoute
   TopicIndexRouteRoute: typeof TopicIndexRouteRoute
+  TopicNameIndexRouteRoute: typeof TopicNameIndexRouteRoute
+  TopicNewIndexRouteRoute: typeof TopicNewIndexRouteRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRouteRoute: IndexRouteRoute,
   TopicIndexRouteRoute: TopicIndexRouteRoute,
+  TopicNameIndexRouteRoute: TopicNameIndexRouteRoute,
+  TopicNewIndexRouteRoute: TopicNewIndexRouteRoute,
 }
 
 export const routeTree = rootRoute
@@ -97,7 +133,9 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/topic/"
+        "/topic/",
+        "/topic/$name/",
+        "/topic/new/"
       ]
     },
     "/": {
@@ -105,6 +143,12 @@ export const routeTree = rootRoute
     },
     "/topic/": {
       "filePath": "topic/index.route.tsx"
+    },
+    "/topic/$name/": {
+      "filePath": "topic/$name/index.route.tsx"
+    },
+    "/topic/new/": {
+      "filePath": "topic/new/index.route.tsx"
     }
   }
 }
