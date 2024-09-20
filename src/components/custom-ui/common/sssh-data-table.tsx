@@ -7,6 +7,7 @@ import { Page, PageInfo } from "sssh-library";
 export interface SsshDataTableOptions<TData> {
   href: string
   key?: keyof TData
+  responsiveHide?: string[]
 }
 
 interface SsshDataTableProps<TData, TValue> {
@@ -33,9 +34,15 @@ export function SsshDataTable<TData, TValue>({
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
+                {headerGroup.headers.map((header, idx) => {
                   return (
-                    <TableHead key={header.id} className="text-[15px] text-center font-bold">
+                    <TableHead
+                      key={header.id + "-" + idx}
+                      className={
+                        "text-[15px] text-center font-bold "
+                        + (options.responsiveHide?.includes(header.id) ? "hidden md:table-cell" : "")
+                      }
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -50,9 +57,9 @@ export function SsshDataTable<TData, TValue>({
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
+              table.getRowModel().rows.map((row, idx) => (
                 <TableRow
-                  key={row.id}
+                  key={row.id + "-" + idx}
                   data-state={row.getIsSelected() && "selected"}
                   className="cursor-pointer hover:bg-gray-100"
                   onClick={
@@ -61,8 +68,14 @@ export function SsshDataTable<TData, TValue>({
                       : () => { }
                   }
                 >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="text-[13px] text-center py-3">
+                  {row.getVisibleCells().map((cell, idx) => (
+                    <TableCell
+                      key={cell.id + "-" + idx}
+                      className={
+                        "text-[13px] text-center py-3 "
+                        + (options.responsiveHide?.includes(cell.column.id) ? "hidden md:table-cell" : "")
+                      }
+                    >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}

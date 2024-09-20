@@ -13,8 +13,11 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index.route'
 import { Route as TopicIndexRouteImport } from './routes/topic/index.route'
+import { Route as SeriesIndexRouteImport } from './routes/series/index.route'
 import { Route as TopicNewIndexRouteImport } from './routes/topic/new/index.route'
 import { Route as TopicNameIndexRouteImport } from './routes/topic/$name/index.route'
+import { Route as SeriesNewIndexRouteImport } from './routes/series/new/index.route'
+import { Route as SeriesNameIndexRouteImport } from './routes/series/$name/index.route'
 
 // Create/Update Routes
 
@@ -28,6 +31,11 @@ const TopicIndexRouteRoute = TopicIndexRouteImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const SeriesIndexRouteRoute = SeriesIndexRouteImport.update({
+  path: '/series/',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const TopicNewIndexRouteRoute = TopicNewIndexRouteImport.update({
   path: '/topic/new/',
   getParentRoute: () => rootRoute,
@@ -35,6 +43,16 @@ const TopicNewIndexRouteRoute = TopicNewIndexRouteImport.update({
 
 const TopicNameIndexRouteRoute = TopicNameIndexRouteImport.update({
   path: '/topic/$name/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const SeriesNewIndexRouteRoute = SeriesNewIndexRouteImport.update({
+  path: '/series/new/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const SeriesNameIndexRouteRoute = SeriesNameIndexRouteImport.update({
+  path: '/series/$name/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -49,11 +67,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRoute
     }
+    '/series/': {
+      id: '/series/'
+      path: '/series'
+      fullPath: '/series'
+      preLoaderRoute: typeof SeriesIndexRouteImport
+      parentRoute: typeof rootRoute
+    }
     '/topic/': {
       id: '/topic/'
       path: '/topic'
       fullPath: '/topic'
       preLoaderRoute: typeof TopicIndexRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/series/$name/': {
+      id: '/series/$name/'
+      path: '/series/$name'
+      fullPath: '/series/$name'
+      preLoaderRoute: typeof SeriesNameIndexRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/series/new/': {
+      id: '/series/new/'
+      path: '/series/new'
+      fullPath: '/series/new'
+      preLoaderRoute: typeof SeriesNewIndexRouteImport
       parentRoute: typeof rootRoute
     }
     '/topic/$name/': {
@@ -77,14 +116,20 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRouteRoute
+  '/series': typeof SeriesIndexRouteRoute
   '/topic': typeof TopicIndexRouteRoute
+  '/series/$name': typeof SeriesNameIndexRouteRoute
+  '/series/new': typeof SeriesNewIndexRouteRoute
   '/topic/$name': typeof TopicNameIndexRouteRoute
   '/topic/new': typeof TopicNewIndexRouteRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRouteRoute
+  '/series': typeof SeriesIndexRouteRoute
   '/topic': typeof TopicIndexRouteRoute
+  '/series/$name': typeof SeriesNameIndexRouteRoute
+  '/series/new': typeof SeriesNewIndexRouteRoute
   '/topic/$name': typeof TopicNameIndexRouteRoute
   '/topic/new': typeof TopicNewIndexRouteRoute
 }
@@ -92,30 +137,61 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRouteRoute
+  '/series/': typeof SeriesIndexRouteRoute
   '/topic/': typeof TopicIndexRouteRoute
+  '/series/$name/': typeof SeriesNameIndexRouteRoute
+  '/series/new/': typeof SeriesNewIndexRouteRoute
   '/topic/$name/': typeof TopicNameIndexRouteRoute
   '/topic/new/': typeof TopicNewIndexRouteRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/topic' | '/topic/$name' | '/topic/new'
+  fullPaths:
+    | '/'
+    | '/series'
+    | '/topic'
+    | '/series/$name'
+    | '/series/new'
+    | '/topic/$name'
+    | '/topic/new'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/topic' | '/topic/$name' | '/topic/new'
-  id: '__root__' | '/' | '/topic/' | '/topic/$name/' | '/topic/new/'
+  to:
+    | '/'
+    | '/series'
+    | '/topic'
+    | '/series/$name'
+    | '/series/new'
+    | '/topic/$name'
+    | '/topic/new'
+  id:
+    | '__root__'
+    | '/'
+    | '/series/'
+    | '/topic/'
+    | '/series/$name/'
+    | '/series/new/'
+    | '/topic/$name/'
+    | '/topic/new/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRouteRoute: typeof IndexRouteRoute
+  SeriesIndexRouteRoute: typeof SeriesIndexRouteRoute
   TopicIndexRouteRoute: typeof TopicIndexRouteRoute
+  SeriesNameIndexRouteRoute: typeof SeriesNameIndexRouteRoute
+  SeriesNewIndexRouteRoute: typeof SeriesNewIndexRouteRoute
   TopicNameIndexRouteRoute: typeof TopicNameIndexRouteRoute
   TopicNewIndexRouteRoute: typeof TopicNewIndexRouteRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRouteRoute: IndexRouteRoute,
+  SeriesIndexRouteRoute: SeriesIndexRouteRoute,
   TopicIndexRouteRoute: TopicIndexRouteRoute,
+  SeriesNameIndexRouteRoute: SeriesNameIndexRouteRoute,
+  SeriesNewIndexRouteRoute: SeriesNewIndexRouteRoute,
   TopicNameIndexRouteRoute: TopicNameIndexRouteRoute,
   TopicNewIndexRouteRoute: TopicNewIndexRouteRoute,
 }
@@ -133,7 +209,10 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/series/",
         "/topic/",
+        "/series/$name/",
+        "/series/new/",
         "/topic/$name/",
         "/topic/new/"
       ]
@@ -141,8 +220,17 @@ export const routeTree = rootRoute
     "/": {
       "filePath": "index.route.tsx"
     },
+    "/series/": {
+      "filePath": "series/index.route.tsx"
+    },
     "/topic/": {
       "filePath": "topic/index.route.tsx"
+    },
+    "/series/$name/": {
+      "filePath": "series/$name/index.route.tsx"
+    },
+    "/series/new/": {
+      "filePath": "series/new/index.route.tsx"
     },
     "/topic/$name/": {
       "filePath": "topic/$name/index.route.tsx"

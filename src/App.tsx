@@ -4,10 +4,17 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "./co
 import { Button } from "./components/ui/button";
 import useUserStore from "./lib/store/user.store";
 import { Separator } from "./components/ui/separator";
+import { useState } from "react";
 
 function App() {
+  const [open, setOpen] = useState<boolean>(false);
   const navigate = useNavigate();
   const { logout } = useUserStore();
+
+  const onClickMenu = (href: string) => {
+    setOpen(false);
+    navigate({ to: href });
+  }
 
   return (
     <>
@@ -21,9 +28,9 @@ function App() {
           <span>{"}"}</span>
         </div>
         <div className="flex justify-end items-center pr-3">
-          <Sheet>
+          <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-              <Menu className="cursor-pointer" />
+              <Menu className="cursor-pointer" onClick={() => setOpen(true)} />
             </SheetTrigger>
             <SheetContent className="bg-white pt-10">
               <SheetHeader>
@@ -32,9 +39,16 @@ function App() {
               <Button
                 className="w-full"
                 variant="link"
-                onClick={() => navigate({ to: "/topic" })}
+                onClick={() => onClickMenu("/topic")}
               >
                 주제
+              </Button>
+              <Button
+                className="w-full"
+                variant="link"
+                onClick={() => onClickMenu("/series")}
+              >
+                시리즈
               </Button>
               <Separator />
               <Button className="w-full" variant="link" onClick={() => logout()}>로그아웃</Button>
