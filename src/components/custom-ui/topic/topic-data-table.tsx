@@ -16,13 +16,13 @@ function TopicDataTable({ topics }: { topics?: Page<ReadTopicDto> }) {
     {
       accessorKey: "createdAt",
       header: "생성일시",
-      accessorFn: (value) => new Date(value.createdAt).toLocaleString()
+      accessorFn: (value) => new Date(value.createdAt).toLocaleDateString()
     }
   ];
 
   const options: SsshDataTableOptions<ReadTopicDto> = {
     href: "/topic/",
-    key: "name"
+    key: "name",
   }
 
   return (

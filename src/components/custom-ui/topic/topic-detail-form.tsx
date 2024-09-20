@@ -10,6 +10,13 @@ import { ReadTopicDto } from 'sssh-library';
 import { req } from '@/lib/api';
 import { useNavigate } from '@tanstack/react-router';
 import { Route } from '@/routes/topic/$name/index.route';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Ellipsis } from 'lucide-react';
 
 function TopicDetailForm() {
   const navigate = useNavigate();
@@ -38,6 +45,18 @@ function TopicDetailForm() {
       if (topicResult.success && topicResult.data) {
         alert("주제가 정상적으로 수정되었습니다.");
       }
+    }
+  }
+
+  const functions = {
+    moveChildSeries: () => {
+      navigate({
+        to: "/series", search: {
+          page: 1,
+          like__name: undefined,
+          where__topicId: data?.id
+        }
+      })
     }
   }
 
@@ -82,7 +101,24 @@ function TopicDetailForm() {
                   )
                 }
               />
-              <Button className="mt-1" variant="outline" type="submit">수정</Button>
+              <div className="flex justify-between">
+                <DropdownMenu>
+                  <DropdownMenuTrigger>
+                    <Button variant="outline">
+                      <Ellipsis />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="bg-white">
+                    <DropdownMenuItem
+                      onClick={functions.moveChildSeries}
+                      className="cursor-pointer hover:bg-gray-100"
+                    >
+                      하위 시리즈 목록으로 이동
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                <Button className="mt-1" variant="outline" type="submit">수정</Button>
+              </div>
             </form>
           </Form>
         </CardContent>
