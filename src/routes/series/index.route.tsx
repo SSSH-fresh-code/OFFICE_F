@@ -22,7 +22,7 @@ export const Route = createFileRoute('/series/')({
     if (like__name !== "undefined" && like__name !== undefined) {
       dto["like__name"] = String(like__name);
     } else if (
-      isNaN(Number(where__topicId))
+      !isNaN(Number(where__topicId))
       && String(where__topicId) !== "NaN"
       && where__topicId !== undefined
     ) {
@@ -33,7 +33,7 @@ export const Route = createFileRoute('/series/')({
   },
   loader: async ({ deps, context: { queryClient } }) => {
     const seriesQueryOptions = queryOptions({
-      queryKey: ['series', String(deps.page)],
+      queryKey: ['series', String(deps.page), String(deps.where__topicId)],
       queryFn: () => req<Page<ReadSeriesDto>>('series', 'get', deps),
       staleTime: 3000
     });

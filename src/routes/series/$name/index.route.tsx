@@ -1,3 +1,4 @@
+import SeriesDetailForm from '@/components/custom-ui/series/series-detail-form';
 import { req } from '@/lib/api';
 import { queryOptions } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router'
@@ -18,7 +19,7 @@ export const Route = createFileRoute('/series/$name/')({
     const series = await queryClient.ensureQueryData(seriesQueryOptions);
     const topics = await queryClient.ensureQueryData(topicQueryOptions);
 
-    return [series, topics];
+    return { series, topics };
   },
-  component: () => <div>Hello /series/$name/!</div>,
+  component: () => <SeriesDetailForm />,
 })

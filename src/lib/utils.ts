@@ -6,8 +6,8 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function hasDiff(o1: any, o2: any) {
-  const k1 = Object.keys(o1).sort();
-  const k2 = Object.keys(o2).sort();
+  const k1 = Object.keys(o1).filter(s => !["createdAt", "updatedAt"].includes(s)).sort();
+  const k2 = Object.keys(o2).filter(s => !["createdAt", "updatedAt"].includes(s)).sort();
 
   if (k1.length !== k2.length && !k1.every(k => k2.includes(k))) {
     console.error("타입이 동일하지 않습니다.");

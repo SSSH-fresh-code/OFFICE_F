@@ -5,23 +5,38 @@ import { Button } from '@/components/ui/button';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { ReadSeriesDto, ReadTopicDto } from 'sssh-library';
+import { ReadSeriesDto } from 'sssh-library';
 import { req } from '@/lib/api';
 import { useNavigate } from '@tanstack/react-router';
-import { Route } from '@/routes/topic/$name/index.route';
 import { SeriesSchema } from '@/lib/schema/series/series.schema';
 import { hasDiff } from '@/lib/utils';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Route } from '@/routes/series/$name/index.route';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Ellipsis } from 'lucide-react';
 
 function SeriesDetailForm() {
   const navigate = useNavigate();
-  const { data } = Route.useLoaderData();
+  const { series: { data }, topics } = Route.useLoaderData();
+
+  if (!data) {
+    alert("시리즈가 존재하지 않습니다!");
+    navigate({ to: "/series" })
+    return;
+  }
+
 
   const form = useForm<z.infer<typeof SeriesSchema>>({
     resolver: zodResolver(SeriesSchema),
     defaultValues: {
-      id: String(data?.id),
-      name: String(data?.name),
-      topicId: String(data?.topicId)
+      id: String(data.id),
+      name: String(data.name),
+      topicId: String(data.topic.id)
     }
   });
 
@@ -40,6 +55,23 @@ function SeriesDetailForm() {
 
       if (seriesResult.success && seriesResult.data) {
         alert("시리즈가 정상적으로 수정되었습니다.");
+      }
+    }
+  }
+
+  const functions = {
+    moveToParentTopic: () => {
+      navigate({ to: "/topic/" + data.topic.name })
+    },
+    remove: () => {
+      if (confirm("해당 시리즈를 삭제하시겠습니까?")) {
+        req<void>(`series/${data.id}`, 'delete')
+          .then((result) => {
+            if (result.success) {
+              alert("정상적으로 삭제되었습니다!");
+              navigate({ to: "/series" });
+            }
+          })
       }
     }
   }
@@ -73,16 +105,32 @@ function SeriesDetailForm() {
               <FormField
                 control={form.control}
                 name="topicId"
-                render={
-                  ({ field }) => (
-                    <FormItem>
-                      <FormLabel>주제</FormLabel>
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>상위 토픽</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="주제를 선택해주세요." />
+                        </SelectTrigger>
                       </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )
-                }
+                      <SelectContent className="bg-white">
+                        {
+                          topics?.data && topics.data.map(d => (
+                            <SelectItem
+                              value={String(d.id)}
+                              key={`select-${d.id}`}
+                              className="cursor-pointer hover:bg-gray-100"
+                            >
+                              {d.name}
+                            </SelectItem>
+                          ))
+                        }
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
               <FormField
                 control={form.control}
@@ -99,7 +147,30 @@ function SeriesDetailForm() {
                   )
                 }
               />
-              <Button className="mt-1" variant="outline" type="submit">수정</Button>
+              <div className="flex justify-between">
+                <DropdownMenu>
+                  <DropdownMenuTrigger>
+                    <Button variant="outline">
+                      <Ellipsis />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="bg-white">
+                    <DropdownMenuItem
+                      onClick={functions.moveToParentTopic}
+                      className="cursor-pointer hover:bg-gray-100"
+                    >
+                      상위 주제로 이동
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={functions.remove}
+                      className="cursor-pointer hover:bg-gray-100"
+                    >
+                      시리즈 삭제
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                <Button className="mt-1" variant="outline" type="submit">수정</Button>
+              </div>
             </form>
           </Form>
         </CardContent>

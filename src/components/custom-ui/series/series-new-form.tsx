@@ -82,7 +82,8 @@ function SeriesNewForm() {
                     <FormMessage />
                   </FormItem>
                 )}
-              />              <FormField
+              />
+              <FormField
                 control={form.control}
                 name="name"
                 render={

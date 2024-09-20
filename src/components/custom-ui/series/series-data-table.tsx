@@ -13,19 +13,21 @@ function SeriesDataTable({ series }: { series?: Page<ReadSeriesDto> }) {
       accessorFn: (value) => convertUnderbar(value.name, true)
     },
     {
+      id: "topicName",
       header: "상위 주제명",
       accessorFn: (value) => convertUnderbar(value.topic.name, true)
     },
     {
-      accessorKey: "createdAt",
+      id: "createdAt",
       header: "생성일시",
-      accessorFn: (value) => new Date(value.createdAt).toLocaleString()
+      accessorFn: (value) => new Date(value.createdAt).toLocaleDateString()
     }
   ];
 
   const options: SsshDataTableOptions<ReadSeriesDto> = {
     href: "/series/",
-    key: "name"
+    key: "name",
+    responsiveHide: ["topicName"]
   }
 
   return (
