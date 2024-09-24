@@ -10,7 +10,7 @@ export interface UserState {
 
 const userStore: (s: StoreApi<UserState>['setState']) => UserState = (set) => ({
   login: (user) => set(
-    (s) => ({ ...s, user: user })
+    (s) => ({ ...s, ...user })
   ),
   logout: () => {
     set(
@@ -20,6 +20,6 @@ const userStore: (s: StoreApi<UserState>['setState']) => UserState = (set) => ({
 });
 
 const useUserStore = create<UserState>(
-  persist(devtools(userStore), { name: "userStore", partialize: (state) => ({ user: state.user }) }) as StateCreator<UserState, [], []>
+  persist(devtools(userStore), { name: "userStore", partialize: (state) => state }) as StateCreator<UserState, [], []>
 );
 export default useUserStore;
