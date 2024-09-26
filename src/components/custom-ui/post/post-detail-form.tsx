@@ -1,31 +1,36 @@
-import z from "zod";
-import { req } from '@/lib/api';
+import z from 'zod';
 import { useForm } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { useNavigate } from "@tanstack/react-router";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { ReadPostDto, ReadSeriesDto } from "sssh-library";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { PostSchema } from "@/lib/schema/post/post.schema";
-import { Textarea } from "@/components/ui/textarea";
-import { Route } from "@/routes/post/new/index.route";
-import { ReactNode, useEffect, useState } from "react";
-import { queryOptions, useQueryClient } from "@tanstack/react-query";
-import useUserStore from "@/lib/store/user.store";
-import SsshFormItem from "../common/sssh-form-item";
+import { Form, FormControl, FormField } from '@/components/ui/form';
+import { ReadPostDto, ReadSeriesDto } from 'sssh-library';
+import { req } from '@/lib/api';
+import { useNavigate } from '@tanstack/react-router';
+import { hasDiff } from '@/lib/utils';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Route } from '@/routes/post/$title/index.route';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Ellipsis } from 'lucide-react';
+import { PostSchema } from '@/lib/schema/post/post.schema';
+import { useEffect, useState } from 'react';
+import SsshFormItem from '../common/sssh-form-item';
+import { queryOptions, useQueryClient } from '@tanstack/react-query';
+import { Textarea } from '@/components/ui/textarea';
 
-function PostNewForm() {
+function PostDetailForm() {
   const navigate = useNavigate();
-  const { user } = useUserStore();
-  const { data } = Route.useLoaderData();
-
   const queryClient = useQueryClient();
+  const { post: { data }, series, topics } = Route.useLoaderData();
 
-  const [topicId, setTopicId] = useState<string>("");
-  const [series, setSeries] = useState<Pick<ReadSeriesDto, 'name' | 'id'>[]>([]);
+  const [topicId, setTopicId] = useState<string>(String(data?.topic.id));
+  const [seriesList, setSeriesList] = useState<Pick<ReadSeriesDto, 'name' | 'id'>[]>(series?.data ? series.data : []);
 
   useEffect(() => {
     if (topicId) {
@@ -38,28 +43,35 @@ function PostNewForm() {
 
       queryClient.ensureQueryData(seriesQueryOptions)
         .then(({ data }) => {
-          setSeries(data ? data : []);
+          setSeriesList(data ? data : []);
         })
         .catch(() => {
-          setSeries([]);
+          setSeriesList([]);
         });
     }
   }, [topicId])
 
-
   const form = useForm<z.infer<typeof PostSchema>>({
     resolver: zodResolver(PostSchema),
     defaultValues: {
-      title: "",
-      content: "",
-      thumbnail: "",
-      authorName: user!.name,
-      topicId: "",
-      seriesId: ""
+      id: String(data?.id),
+      title: String(data?.title),
+      content: String(data?.content),
+      thumbnail: String(data?.thumbnail),
+      authorName: String(data?.author.name),
+      topicId: String(data?.topic.id),
+      seriesId: data?.series ? String(data.series.id) : undefined
     }
   });
 
+  if (!data) {
+    alert("게시글이 존재하지 않습니다!");
+    navigate({ to: "/post" })
+    return;
+  }
+
   async function onSubmit({
+    id,
     title,
     content,
     thumbnail,
@@ -67,7 +79,13 @@ function PostNewForm() {
     topicId,
     seriesId
   }: z.infer<typeof PostSchema>) {
+    if (!hasDiff(data, { id, title, content, thumbnail, authorName, topicId, seriesId })) {
+      alert("수정된 내용이 존재하지 않습니다.");
+      return;
+    }
+
     const json: Record<string, unknown> = {
+      id: Number(id),
       title,
       content,
       authorName,
@@ -79,15 +97,33 @@ function PostNewForm() {
       json.seriesId = Number(seriesId);
     }
 
-    if (confirm(`게시글을 생성하시겠습니까?`)) {
-      const postResult = await req<ReadPostDto>('post', 'post', json);
+    if (confirm(`게시글을 변경하시겠습니까?`)) {
+      const postResult = await req<ReadPostDto>('post', 'put', json);
 
       if (postResult.success && postResult.data) {
-        if (confirm("게시글이 정상적으로 생성되었습니다.\n해당 게시글로 이동하시겠습니까?")) {
-          navigate({ to: `/post/${postResult.data.title}` });
-        } else {
-          navigate({ to: "/post" });
-        }
+        alert("게시글이 정상적으로 수정되었습니다.");
+      }
+    }
+  }
+
+  const functions = {
+    moveToParentTopic: () => {
+      navigate({ to: "/topic/" + data.topic.name })
+    },
+    moveToParentSeries: () => {
+      if (data.series) {
+        navigate({ to: "/series/" + data.series.name })
+      }
+    },
+    remove: () => {
+      if (confirm("해당 게시글을 삭제하시겠습니까?")) {
+        req<void>(`post/${data.id}`, 'delete')
+          .then((result) => {
+            if (result.success) {
+              alert("정상적으로 삭제되었습니다!");
+              navigate({ to: "/post" });
+            }
+          })
       }
     }
   }
@@ -96,10 +132,10 @@ function PostNewForm() {
     <>
       <Card className="p-5 pt-3 bg-white bg-opacity-90">
         <div className="flex justify-end">
-          <Button variant="link" onClick={() => { navigate({ to: "/post" }) }}>뒤로가기</Button>
+          <Button variant="link" onClick={() => { navigate({ to: "/post" }) }}>목록</Button>
         </div>
         <CardHeader className="pt-0">
-          <CardTitle className="w-full text-center text-2xl">게시글 생성</CardTitle>
+          <CardTitle className="w-full text-center text-2xl">시리즈 상세정보</CardTitle>
         </CardHeader>
         <CardContent className="w-full flex justify-center">
           <Form {...form}>
@@ -127,7 +163,7 @@ function PostNewForm() {
                       </FormControl>
                       <SelectContent className="bg-white">
                         {
-                          data && data.map(d => (
+                          topics.data && topics.data.map(d => (
                             <SelectItem
                               value={String(d.id)}
                               key={`select-${d.id}`}
@@ -159,7 +195,7 @@ function PostNewForm() {
                       </FormControl>
                       <SelectContent className="bg-white">
                         {
-                          series && series.map(d => (
+                          seriesList && seriesList.map(d => (
                             <SelectItem
                               value={String(d.id)}
                               key={`select-series-${d.id}`}
@@ -247,5 +283,4 @@ function PostNewForm() {
   );
 }
 
-export default PostNewForm;
-
+export default PostDetailForm;

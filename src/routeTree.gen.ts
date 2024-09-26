@@ -20,7 +20,7 @@ import { Route as TopicNameIndexRouteImport } from './routes/topic/$name/index.r
 import { Route as SeriesNewIndexRouteImport } from './routes/series/new/index.route'
 import { Route as SeriesNameIndexRouteImport } from './routes/series/$name/index.route'
 import { Route as PostNewIndexRouteImport } from './routes/post/new/index.route'
-import { Route as PostNameIndexRouteImport } from './routes/post/$name/index.route'
+import { Route as PostTitleIndexRouteImport } from './routes/post/$title/index.route'
 
 // Create/Update Routes
 
@@ -69,8 +69,8 @@ const PostNewIndexRouteRoute = PostNewIndexRouteImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const PostNameIndexRouteRoute = PostNameIndexRouteImport.update({
-  path: '/post/$name/',
+const PostTitleIndexRouteRoute = PostTitleIndexRouteImport.update({
+  path: '/post/$title/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -106,11 +106,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TopicIndexRouteImport
       parentRoute: typeof rootRoute
     }
-    '/post/$name/': {
-      id: '/post/$name/'
-      path: '/post/$name'
-      fullPath: '/post/$name'
-      preLoaderRoute: typeof PostNameIndexRouteImport
+    '/post/$title/': {
+      id: '/post/$title/'
+      path: '/post/$title'
+      fullPath: '/post/$title'
+      preLoaderRoute: typeof PostTitleIndexRouteImport
       parentRoute: typeof rootRoute
     }
     '/post/new/': {
@@ -158,7 +158,7 @@ export interface FileRoutesByFullPath {
   '/post': typeof PostIndexRouteRoute
   '/series': typeof SeriesIndexRouteRoute
   '/topic': typeof TopicIndexRouteRoute
-  '/post/$name': typeof PostNameIndexRouteRoute
+  '/post/$title': typeof PostTitleIndexRouteRoute
   '/post/new': typeof PostNewIndexRouteRoute
   '/series/$name': typeof SeriesNameIndexRouteRoute
   '/series/new': typeof SeriesNewIndexRouteRoute
@@ -171,7 +171,7 @@ export interface FileRoutesByTo {
   '/post': typeof PostIndexRouteRoute
   '/series': typeof SeriesIndexRouteRoute
   '/topic': typeof TopicIndexRouteRoute
-  '/post/$name': typeof PostNameIndexRouteRoute
+  '/post/$title': typeof PostTitleIndexRouteRoute
   '/post/new': typeof PostNewIndexRouteRoute
   '/series/$name': typeof SeriesNameIndexRouteRoute
   '/series/new': typeof SeriesNewIndexRouteRoute
@@ -185,7 +185,7 @@ export interface FileRoutesById {
   '/post/': typeof PostIndexRouteRoute
   '/series/': typeof SeriesIndexRouteRoute
   '/topic/': typeof TopicIndexRouteRoute
-  '/post/$name/': typeof PostNameIndexRouteRoute
+  '/post/$title/': typeof PostTitleIndexRouteRoute
   '/post/new/': typeof PostNewIndexRouteRoute
   '/series/$name/': typeof SeriesNameIndexRouteRoute
   '/series/new/': typeof SeriesNewIndexRouteRoute
@@ -200,7 +200,7 @@ export interface FileRouteTypes {
     | '/post'
     | '/series'
     | '/topic'
-    | '/post/$name'
+    | '/post/$title'
     | '/post/new'
     | '/series/$name'
     | '/series/new'
@@ -212,7 +212,7 @@ export interface FileRouteTypes {
     | '/post'
     | '/series'
     | '/topic'
-    | '/post/$name'
+    | '/post/$title'
     | '/post/new'
     | '/series/$name'
     | '/series/new'
@@ -224,7 +224,7 @@ export interface FileRouteTypes {
     | '/post/'
     | '/series/'
     | '/topic/'
-    | '/post/$name/'
+    | '/post/$title/'
     | '/post/new/'
     | '/series/$name/'
     | '/series/new/'
@@ -238,7 +238,7 @@ export interface RootRouteChildren {
   PostIndexRouteRoute: typeof PostIndexRouteRoute
   SeriesIndexRouteRoute: typeof SeriesIndexRouteRoute
   TopicIndexRouteRoute: typeof TopicIndexRouteRoute
-  PostNameIndexRouteRoute: typeof PostNameIndexRouteRoute
+  PostTitleIndexRouteRoute: typeof PostTitleIndexRouteRoute
   PostNewIndexRouteRoute: typeof PostNewIndexRouteRoute
   SeriesNameIndexRouteRoute: typeof SeriesNameIndexRouteRoute
   SeriesNewIndexRouteRoute: typeof SeriesNewIndexRouteRoute
@@ -251,7 +251,7 @@ const rootRouteChildren: RootRouteChildren = {
   PostIndexRouteRoute: PostIndexRouteRoute,
   SeriesIndexRouteRoute: SeriesIndexRouteRoute,
   TopicIndexRouteRoute: TopicIndexRouteRoute,
-  PostNameIndexRouteRoute: PostNameIndexRouteRoute,
+  PostTitleIndexRouteRoute: PostTitleIndexRouteRoute,
   PostNewIndexRouteRoute: PostNewIndexRouteRoute,
   SeriesNameIndexRouteRoute: SeriesNameIndexRouteRoute,
   SeriesNewIndexRouteRoute: SeriesNewIndexRouteRoute,
@@ -275,7 +275,7 @@ export const routeTree = rootRoute
         "/post/",
         "/series/",
         "/topic/",
-        "/post/$name/",
+        "/post/$title/",
         "/post/new/",
         "/series/$name/",
         "/series/new/",
@@ -295,8 +295,8 @@ export const routeTree = rootRoute
     "/topic/": {
       "filePath": "topic/index.route.tsx"
     },
-    "/post/$name/": {
-      "filePath": "post/$name/index.route.tsx"
+    "/post/$title/": {
+      "filePath": "post/$title/index.route.tsx"
     },
     "/post/new/": {
       "filePath": "post/new/index.route.tsx"
