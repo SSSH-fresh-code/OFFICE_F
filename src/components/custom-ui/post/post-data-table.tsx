@@ -5,7 +5,7 @@ import { SsshDataTable, SsshDataTableHeader, SsshDataTableOptions } from "../com
 import { Button } from "@/components/ui/button";
 import { Image, ImageOff, X } from "lucide-react";
 
-function PostDataTable({ posts }: { posts?: Page<ReadPostDto> }) {
+function PostDataTable({ posts, isFiltering }: { posts?: Page<ReadPostDto>, isFiltering?: boolean }) {
   const navigate = useNavigate();
 
   const columns: ColumnDef<ReadPostDto>[] = [
@@ -52,13 +52,25 @@ function PostDataTable({ posts }: { posts?: Page<ReadPostDto> }) {
   return (
     <>
       <SsshDataTableHeader info={posts?.info}>
-        <Button
-          variant="outline"
-          className="font-bold"
-          onClick={() => { navigate({ to: "/post/new" }) }}
-        >
-          작성
-        </Button>
+        <div className="flex gap-2 justify-end items-end">
+          {isFiltering &&
+            <Button
+              variant="link"
+              className="font-light text-[11px] flex items-end justify-end"
+              onClick={() => { navigate({ to: "/post" }) }}
+            >
+              검색필터 초기화
+            </Button>
+
+          }
+          <Button
+            variant="outline"
+            className="font-bold"
+            onClick={() => { navigate({ to: "/post/new" }) }}
+          >
+            추가
+          </Button>
+        </div>
       </SsshDataTableHeader >
       <SsshDataTable columns={columns} data={posts} options={options} />
     </>

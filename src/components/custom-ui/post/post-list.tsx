@@ -5,6 +5,9 @@ import { Route } from "@/routes/post/index.route";
 
 function PostList() {
   const { success, data } = Route.useLoaderData();
+  const { where__topicId, where__seriesId, where__authorName } = Route.useLoaderDeps();
+
+  const isFilltering = !!where__topicId || !!where__seriesId || !!where__authorName;
 
   const [posts, setPosts] = useState<Page<ReadPostDto>>();
 
@@ -16,7 +19,7 @@ function PostList() {
 
 
   return (
-    <PostDataTable posts={posts} />
+    <PostDataTable posts={posts} isFiltering={isFilltering} />
   );
 }
 

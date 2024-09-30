@@ -36,6 +36,8 @@ function App() {
               <SheetHeader>
                 <SheetTitle />
               </SheetHeader>
+              <Separator className="my-1 bg-gray-200" />
+              <p className="font-bold text-center mt-3 mb-2">블로그 관리</p>
               <Button
                 className="w-full"
                 variant="link"
@@ -50,7 +52,14 @@ function App() {
               >
                 시리즈
               </Button>
-              <Separator />
+              <Button
+                className="w-full"
+                variant="link"
+                onClick={() => onClickMenu("/post")}
+              >
+                게시글
+              </Button>
+              <Separator className="my-1 bg-gray-200" />
               <Button className="w-full" variant="link" onClick={() => logout()}>로그아웃</Button>
             </SheetContent>
           </Sheet>

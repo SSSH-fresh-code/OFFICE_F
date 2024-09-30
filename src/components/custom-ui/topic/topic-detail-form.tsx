@@ -17,6 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Ellipsis } from 'lucide-react';
+import SsshDropdownMenuItem from '../common/sssh-dropdown-menu-item';
 
 function TopicDetailForm() {
   const navigate = useNavigate();
@@ -56,6 +57,11 @@ function TopicDetailForm() {
           like__name: undefined,
           where__topicId: data?.id
         }
+      })
+    },
+    moveChildPosts: () => {
+      navigate({
+        to: "/post?where__topicId=" + data?.id
       })
     }
   }
@@ -109,12 +115,16 @@ function TopicDetailForm() {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="bg-white">
-                    <DropdownMenuItem
+                    <SsshDropdownMenuItem
                       onClick={functions.moveChildSeries}
-                      className="cursor-pointer hover:bg-gray-100"
                     >
                       하위 시리즈 목록으로 이동
-                    </DropdownMenuItem>
+                    </SsshDropdownMenuItem>
+                    <SsshDropdownMenuItem
+                      onClick={functions.moveChildPosts}
+                    >
+                      하위 게시글 목록으로 이동
+                    </SsshDropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
                 <Button className="mt-1" variant="outline" type="submit">수정</Button>

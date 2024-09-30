@@ -23,6 +23,7 @@ import { useEffect, useState } from 'react';
 import SsshFormItem from '../common/sssh-form-item';
 import { queryOptions, useQueryClient } from '@tanstack/react-query';
 import { Textarea } from '@/components/ui/textarea';
+import SsshDropdownMenuItem from '../common/sssh-dropdown-menu-item';
 
 function PostDetailForm() {
   const navigate = useNavigate();
@@ -113,6 +114,11 @@ function PostDetailForm() {
     moveToParentSeries: () => {
       if (data.series) {
         navigate({ to: "/series/" + data.series.name })
+      }
+    },
+    moveToAnotherPostCurrentAutor: () => {
+      if (data.series) {
+        navigate({ to: "/post?where__authorName=" + data.author.name })
       }
     },
     remove: () => {
@@ -274,7 +280,38 @@ function PostDetailForm() {
                   )
                 }
               />
-              <Button className="mt-1" variant="outline" type="submit">추가</Button>
+              <div className="flex justify-between">
+                <DropdownMenu>
+                  <DropdownMenuTrigger>
+                    <Button variant="outline">
+                      <Ellipsis />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="bg-white">
+                    <SsshDropdownMenuItem
+                      onClick={functions.moveToParentTopic}
+                    >
+                      상위 주제로 이동
+                    </SsshDropdownMenuItem>
+                    <SsshDropdownMenuItem
+                      onClick={functions.moveToParentSeries}
+                    >
+                      상위 시리즈로 이동
+                    </SsshDropdownMenuItem>
+                    <SsshDropdownMenuItem
+                      onClick={functions.moveToAnotherPostCurrentAutor}
+                    >
+                      해당 저자의 다른 게시글 보기
+                    </SsshDropdownMenuItem>
+                    <SsshDropdownMenuItem
+                      onClick={functions.remove}
+                    >
+                      게시글 삭제
+                    </SsshDropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                <Button className="mt-1" variant="outline" type="submit">수정</Button>
+              </div>
             </form>
           </Form>
         </CardContent>
