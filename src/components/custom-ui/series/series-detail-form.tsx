@@ -19,6 +19,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Ellipsis } from 'lucide-react';
+import SsshDropdownMenuItem from '../common/sssh-dropdown-menu-item';
 
 function SeriesDetailForm() {
   const navigate = useNavigate();
@@ -62,6 +63,14 @@ function SeriesDetailForm() {
   const functions = {
     moveToParentTopic: () => {
       navigate({ to: "/topic/" + data.topic.name })
+    },
+    moveToParentT: () => {
+      navigate({ to: "/topic/" + data.topic.name })
+    },
+    moveChildPosts: () => {
+      navigate({
+        to: "/post?where__seriesId=" + data.id
+      })
     },
     remove: () => {
       if (confirm("해당 시리즈를 삭제하시겠습니까?")) {
@@ -161,6 +170,11 @@ function SeriesDetailForm() {
                     >
                       상위 주제로 이동
                     </DropdownMenuItem>
+                    <SsshDropdownMenuItem
+                      onClick={functions.moveChildPosts}
+                    >
+                      하위 게시글 목록으로 이동
+                    </SsshDropdownMenuItem>
                     <DropdownMenuItem
                       onClick={functions.remove}
                       className="cursor-pointer hover:bg-gray-100"

@@ -1,7 +1,6 @@
 import ky from "ky";
 import useUserStore from "./store/user.store";
 import { HttpMethod, KyOptions } from "node_modules/ky/distribution/types/options";
-import { Navigate } from "@tanstack/react-router";
 
 export type Res<T> = {
   success: boolean,
