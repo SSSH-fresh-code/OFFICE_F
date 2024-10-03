@@ -64,7 +64,10 @@ export function SsshDataTable<TData, TValue>({
                   className="cursor-pointer hover:bg-gray-100"
                   onClick={
                     (options && options.key)
-                      ? () => { navigate({ to: options.href + row.original[options.key!] }) }
+                      ? (a) => {
+                        console.log(a);
+                        navigate({ to: options.href + row.original[options.key!] })
+                      }
                       : () => { }
                   }
                 >

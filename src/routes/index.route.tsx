@@ -5,11 +5,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import useSsshStore from "@/lib/store/sssh.store";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { createFileRoute } from "@tanstack/react-router";
 import { convertUnderbar, ReadPostDto } from "sssh-library";
 
 export const Route = createFileRoute("/")({
+  beforeLoad: () => {
+    useSsshStore.getState().setTitle("");
+  },
   component: () => <MainPage />,
 });
 

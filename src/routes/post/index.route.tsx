@@ -1,11 +1,15 @@
 import PostList from '@/components/custom-ui/post/post-list'
-import SeriesList from '@/components/custom-ui/series/series-list'
 import { req } from '@/lib/api'
+import { PAGE_TITLE } from '@/lib/const/page-title.const'
+import useSsshStore from '@/lib/store/sssh.store'
 import { queryOptions } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
-import { Page, ReadPostDto, ReadSeriesDto } from 'sssh-library'
+import { Page, ReadPostDto } from 'sssh-library'
 
 export const Route = createFileRoute('/post/')({
+  beforeLoad: () => {
+    useSsshStore.getState().setTitle(PAGE_TITLE["/post"]);
+  },
   validateSearch: (search: Record<string, unknown>) => ({
     page: Number(search.page ?? 1),
     like__title: search.like__title,
