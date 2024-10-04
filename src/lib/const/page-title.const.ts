@@ -10,4 +10,5 @@ export const PAGE_TITLE = {
   "/series/$name": "시리즈 상세",
   "/user": "회원 목록",
   "/user/$id": "회원 상세",
+  "/user/$id/permission": "회원 권한 관리"
 } as const;

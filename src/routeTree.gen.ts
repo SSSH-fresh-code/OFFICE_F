@@ -23,6 +23,7 @@ import { Route as SeriesNewIndexRouteImport } from './routes/series/new/index.ro
 import { Route as SeriesNameIndexRouteImport } from './routes/series/$name/index.route'
 import { Route as PostNewIndexRouteImport } from './routes/post/new/index.route'
 import { Route as PostTitleIndexRouteImport } from './routes/post/$title/index.route'
+import { Route as UserIdPermissionIndexRouteImport } from './routes/user/$id/permission/index.route'
 
 // Create/Update Routes
 
@@ -85,6 +86,13 @@ const PostTitleIndexRouteRoute = PostTitleIndexRouteImport.update({
   path: '/post/$title/',
   getParentRoute: () => rootRoute,
 } as any)
+
+const UserIdPermissionIndexRouteRoute = UserIdPermissionIndexRouteImport.update(
+  {
+    path: '/user/$id/permission/',
+    getParentRoute: () => rootRoute,
+  } as any,
+)
 
 // Populate the FileRoutesByPath interface
 
@@ -174,6 +182,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UserIdIndexRouteImport
       parentRoute: typeof rootRoute
     }
+    '/user/$id/permission/': {
+      id: '/user/$id/permission/'
+      path: '/user/$id/permission'
+      fullPath: '/user/$id/permission'
+      preLoaderRoute: typeof UserIdPermissionIndexRouteImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -192,6 +207,7 @@ export interface FileRoutesByFullPath {
   '/topic/$name': typeof TopicNameIndexRouteRoute
   '/topic/new': typeof TopicNewIndexRouteRoute
   '/user/$id': typeof UserIdIndexRouteRoute
+  '/user/$id/permission': typeof UserIdPermissionIndexRouteRoute
 }
 
 export interface FileRoutesByTo {
@@ -207,6 +223,7 @@ export interface FileRoutesByTo {
   '/topic/$name': typeof TopicNameIndexRouteRoute
   '/topic/new': typeof TopicNewIndexRouteRoute
   '/user/$id': typeof UserIdIndexRouteRoute
+  '/user/$id/permission': typeof UserIdPermissionIndexRouteRoute
 }
 
 export interface FileRoutesById {
@@ -223,6 +240,7 @@ export interface FileRoutesById {
   '/topic/$name/': typeof TopicNameIndexRouteRoute
   '/topic/new/': typeof TopicNewIndexRouteRoute
   '/user/$id/': typeof UserIdIndexRouteRoute
+  '/user/$id/permission/': typeof UserIdPermissionIndexRouteRoute
 }
 
 export interface FileRouteTypes {
@@ -240,6 +258,7 @@ export interface FileRouteTypes {
     | '/topic/$name'
     | '/topic/new'
     | '/user/$id'
+    | '/user/$id/permission'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -254,6 +273,7 @@ export interface FileRouteTypes {
     | '/topic/$name'
     | '/topic/new'
     | '/user/$id'
+    | '/user/$id/permission'
   id:
     | '__root__'
     | '/'
@@ -268,6 +288,7 @@ export interface FileRouteTypes {
     | '/topic/$name/'
     | '/topic/new/'
     | '/user/$id/'
+    | '/user/$id/permission/'
   fileRoutesById: FileRoutesById
 }
 
@@ -284,6 +305,7 @@ export interface RootRouteChildren {
   TopicNameIndexRouteRoute: typeof TopicNameIndexRouteRoute
   TopicNewIndexRouteRoute: typeof TopicNewIndexRouteRoute
   UserIdIndexRouteRoute: typeof UserIdIndexRouteRoute
+  UserIdPermissionIndexRouteRoute: typeof UserIdPermissionIndexRouteRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -299,6 +321,7 @@ const rootRouteChildren: RootRouteChildren = {
   TopicNameIndexRouteRoute: TopicNameIndexRouteRoute,
   TopicNewIndexRouteRoute: TopicNewIndexRouteRoute,
   UserIdIndexRouteRoute: UserIdIndexRouteRoute,
+  UserIdPermissionIndexRouteRoute: UserIdPermissionIndexRouteRoute,
 }
 
 export const routeTree = rootRoute
@@ -324,7 +347,8 @@ export const routeTree = rootRoute
         "/series/new/",
         "/topic/$name/",
         "/topic/new/",
-        "/user/$id/"
+        "/user/$id/",
+        "/user/$id/permission/"
       ]
     },
     "/": {
@@ -362,6 +386,9 @@ export const routeTree = rootRoute
     },
     "/user/$id/": {
       "filePath": "user/$id/index.route.tsx"
+    },
+    "/user/$id/permission/": {
+      "filePath": "user/$id/permission/index.route.tsx"
     }
   }
 }
