@@ -5,11 +5,13 @@ import { Button } from "./components/ui/button";
 import useUserStore from "./lib/store/user.store";
 import { Separator } from "./components/ui/separator";
 import { useState } from "react";
+import useSsshStore from "./lib/store/sssh.store";
 
 function App() {
   const [open, setOpen] = useState<boolean>(false);
   const navigate = useNavigate();
   const { logout } = useUserStore();
+  const { title } = useSsshStore();
 
   const onClickMenu = (href: string) => {
     setOpen(false);
@@ -36,6 +38,22 @@ function App() {
               <SheetHeader>
                 <SheetTitle />
               </SheetHeader>
+              <Separator className="my-1 bg-gray-200" />
+              <p className="font-bold text-center mt-3 mb-2">회원/권한 관리</p>
+              <Button
+                className="w-full"
+                variant="link"
+                onClick={() => onClickMenu("/user")}
+              >
+                회원 관리
+              </Button>
+              <Button
+                className="w-full"
+                variant="link"
+                onClick={() => onClickMenu("/permission")}
+              >
+                권한 관리
+              </Button>
               <Separator className="my-1 bg-gray-200" />
               <p className="font-bold text-center mt-3 mb-2">블로그 관리</p>
               <Button
@@ -66,6 +84,9 @@ function App() {
         </div>
       </header >
       <div className="p-2 md:p-4">
+        {
+          title && <p className="text-3xl py-2 font-extrabold">{title}</p>
+        }
         <Outlet />
       </div>
     </>

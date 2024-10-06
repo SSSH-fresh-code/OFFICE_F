@@ -1,10 +1,15 @@
 import SeriesList from '@/components/custom-ui/series/series-list'
 import { req } from '@/lib/api';
+import { PAGE_TITLE } from '@/lib/const/page-title.const';
+import useSsshStore from '@/lib/store/sssh.store';
 import { queryOptions } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router'
 import { Page, ReadSeriesDto } from 'sssh-library';
 
 export const Route = createFileRoute('/series/')({
+  beforeLoad: () => {
+    useSsshStore.getState().setTitle(PAGE_TITLE["/series"]);
+  },
   validateSearch: (search: Record<string, unknown>) =>
   ({
     page: Number(search.page ?? 1),

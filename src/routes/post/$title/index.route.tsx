@@ -1,10 +1,14 @@
 import PostDetailForm from '@/components/custom-ui/post/post-detail-form'
 import { req } from '@/lib/api'
+import useSsshStore from '@/lib/store/sssh.store'
 import { queryOptions } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 import { ReadPostDto, ReadSeriesDto, ReadTopicDto } from 'sssh-library'
 
 export const Route = createFileRoute('/post/$title/')({
+  beforeLoad: () => {
+    useSsshStore.getState().setTitle("");
+  },
   loader: async ({ params, context: { queryClient } }) => {
     queryClient.invalidateQueries({ queryKey: ['optionForSelect'] });
 
