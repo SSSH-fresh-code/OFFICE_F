@@ -1,56 +1,64 @@
 import { useNavigate } from "@tanstack/react-router";
 import { ColumnDef } from "@tanstack/react-table";
 import { Page, ReadUserDto } from "sssh-library";
-import { SsshDataTable, SsshDataTableHeader, SsshDataTableOptions } from "../common/sssh-data-table";
+import {
+	SsshDataTable,
+	SsshDataTableHeader,
+	SsshDataTableOptions,
+} from "../common/sssh-data-table";
 import { Button } from "@/components/ui/button";
 import { SquareArrowOutUpRight } from "lucide-react";
 
-function UserDataTable({ users, isFiltering }: { users?: Page<ReadUserDto>, isFiltering?: boolean }) {
-  const navigate = useNavigate();
+function UserDataTable({
+	users,
+	isFiltering,
+}: { users?: Page<ReadUserDto>; isFiltering?: boolean }) {
+	const navigate = useNavigate();
 
-  const columns: ColumnDef<ReadUserDto>[] = [
-    {
-      id: "email",
-      header: "이메일",
-      accessorKey: "email",
-    },
-    {
-      id: "name",
-      header: "이름",
-      accessorKey: "name",
-    },
-    {
-      id: "createdAt",
-      header: "가입일시",
-      accessorFn: (value) => new Date(value.createdAt).toLocaleDateString()
-    }
-  ];
+	const columns: ColumnDef<ReadUserDto>[] = [
+		{
+			id: "email",
+			header: "이메일",
+			accessorKey: "email",
+		},
+		{
+			id: "name",
+			header: "이름",
+			accessorKey: "name",
+		},
+		{
+			id: "createdAt",
+			header: "가입일시",
+			accessorFn: (value) => new Date(value.createdAt).toLocaleDateString(),
+		},
+	];
 
-  const options: SsshDataTableOptions<ReadUserDto> = {
-    href: "/user/",
-    key: "id",
-    responsiveHide: ["email", "createdAt"]
-  }
+	const options: SsshDataTableOptions<ReadUserDto> = {
+		href: "/user/",
+		key: "id",
+		responsiveHide: ["email", "createdAt"],
+	};
 
-  return (
-    <>
-      <SsshDataTableHeader info={users?.info}>
-        <div className="flex gap-2 justify-end items-end">
-          {isFiltering &&
-            <Button
-              variant="link"
-              className="font-light text-[11px] flex items-end justify-end"
-              onClick={() => { navigate({ to: "/user" }) }}
-            >
-              검색필터 초기화
-            </Button>
-
-          }
-        </div>
-      </SsshDataTableHeader >
-      <SsshDataTable columns={columns} data={users} options={options} />
-    </>
-  )
+	return (
+		<>
+			<SsshDataTableHeader info={users?.info}>
+				<div className="flex gap-2 justify-end items-end">
+					{isFiltering && (
+						<Button
+							variant="link"
+							className="font-light text-[11px] flex items-end justify-end"
+							onClick={() => {
+								navigate({ to: "/user" });
+							}}
+						>
+							검색필터 초기화
+						</Button>
+					)}
+				</div>
+			</SsshDataTableHeader>
+			<SsshDataTable columns={columns} data={users} options={options} />
+		</>
+	);
 }
 
 export default UserDataTable;

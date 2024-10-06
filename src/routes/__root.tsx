@@ -5,14 +5,13 @@ import GuestApp from "@/components/guest/guest-app";
 import { QueryClient } from "@tanstack/react-query";
 
 export const Route = createRootRouteWithContext<{
-  queryClient: QueryClient
+	queryClient: QueryClient;
 }>()({
-  component: Root
+	component: Root,
 });
 
 function Root() {
-  const { user, login } = useUserStore();
+	const { user, login } = useUserStore();
 
-  return user ? <App /> : <GuestApp login={login} />
+	return user ? <App /> : <GuestApp login={login} />;
 }
-
