@@ -47,6 +47,13 @@ function App() {
               >
                 회원 관리
               </Button>
+              <Button
+                className="w-full"
+                variant="link"
+                onClick={() => onClickMenu("/permission")}
+              >
+                권한 관리
+              </Button>
               <Separator className="my-1 bg-gray-200" />
               <p className="font-bold text-center mt-3 mb-2">블로그 관리</p>
               <Button

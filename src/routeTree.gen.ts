@@ -16,6 +16,7 @@ import { Route as UserIndexRouteImport } from './routes/user/index.route'
 import { Route as TopicIndexRouteImport } from './routes/topic/index.route'
 import { Route as SeriesIndexRouteImport } from './routes/series/index.route'
 import { Route as PostIndexRouteImport } from './routes/post/index.route'
+import { Route as PermissionIndexRouteImport } from './routes/permission/index.route'
 import { Route as UserIdIndexRouteImport } from './routes/user/$id/index.route'
 import { Route as TopicNewIndexRouteImport } from './routes/topic/new/index.route'
 import { Route as TopicNameIndexRouteImport } from './routes/topic/$name/index.route'
@@ -23,6 +24,8 @@ import { Route as SeriesNewIndexRouteImport } from './routes/series/new/index.ro
 import { Route as SeriesNameIndexRouteImport } from './routes/series/$name/index.route'
 import { Route as PostNewIndexRouteImport } from './routes/post/new/index.route'
 import { Route as PostTitleIndexRouteImport } from './routes/post/$title/index.route'
+import { Route as PermissionNewIndexRouteImport } from './routes/permission/new/index.route'
+import { Route as PermissionNameIndexRouteImport } from './routes/permission/$name/index.route'
 import { Route as UserIdPermissionIndexRouteImport } from './routes/user/$id/permission/index.route'
 
 // Create/Update Routes
@@ -49,6 +52,11 @@ const SeriesIndexRouteRoute = SeriesIndexRouteImport.update({
 
 const PostIndexRouteRoute = PostIndexRouteImport.update({
   path: '/post/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const PermissionIndexRouteRoute = PermissionIndexRouteImport.update({
+  path: '/permission/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -87,6 +95,16 @@ const PostTitleIndexRouteRoute = PostTitleIndexRouteImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const PermissionNewIndexRouteRoute = PermissionNewIndexRouteImport.update({
+  path: '/permission/new/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const PermissionNameIndexRouteRoute = PermissionNameIndexRouteImport.update({
+  path: '/permission/$name/',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const UserIdPermissionIndexRouteRoute = UserIdPermissionIndexRouteImport.update(
   {
     path: '/user/$id/permission/',
@@ -103,6 +121,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/permission/': {
+      id: '/permission/'
+      path: '/permission'
+      fullPath: '/permission'
+      preLoaderRoute: typeof PermissionIndexRouteImport
       parentRoute: typeof rootRoute
     }
     '/post/': {
@@ -131,6 +156,20 @@ declare module '@tanstack/react-router' {
       path: '/user'
       fullPath: '/user'
       preLoaderRoute: typeof UserIndexRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/permission/$name/': {
+      id: '/permission/$name/'
+      path: '/permission/$name'
+      fullPath: '/permission/$name'
+      preLoaderRoute: typeof PermissionNameIndexRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/permission/new/': {
+      id: '/permission/new/'
+      path: '/permission/new'
+      fullPath: '/permission/new'
+      preLoaderRoute: typeof PermissionNewIndexRouteImport
       parentRoute: typeof rootRoute
     }
     '/post/$title/': {
@@ -196,10 +235,13 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRouteRoute
+  '/permission': typeof PermissionIndexRouteRoute
   '/post': typeof PostIndexRouteRoute
   '/series': typeof SeriesIndexRouteRoute
   '/topic': typeof TopicIndexRouteRoute
   '/user': typeof UserIndexRouteRoute
+  '/permission/$name': typeof PermissionNameIndexRouteRoute
+  '/permission/new': typeof PermissionNewIndexRouteRoute
   '/post/$title': typeof PostTitleIndexRouteRoute
   '/post/new': typeof PostNewIndexRouteRoute
   '/series/$name': typeof SeriesNameIndexRouteRoute
@@ -212,10 +254,13 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexRouteRoute
+  '/permission': typeof PermissionIndexRouteRoute
   '/post': typeof PostIndexRouteRoute
   '/series': typeof SeriesIndexRouteRoute
   '/topic': typeof TopicIndexRouteRoute
   '/user': typeof UserIndexRouteRoute
+  '/permission/$name': typeof PermissionNameIndexRouteRoute
+  '/permission/new': typeof PermissionNewIndexRouteRoute
   '/post/$title': typeof PostTitleIndexRouteRoute
   '/post/new': typeof PostNewIndexRouteRoute
   '/series/$name': typeof SeriesNameIndexRouteRoute
@@ -229,10 +274,13 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRouteRoute
+  '/permission/': typeof PermissionIndexRouteRoute
   '/post/': typeof PostIndexRouteRoute
   '/series/': typeof SeriesIndexRouteRoute
   '/topic/': typeof TopicIndexRouteRoute
   '/user/': typeof UserIndexRouteRoute
+  '/permission/$name/': typeof PermissionNameIndexRouteRoute
+  '/permission/new/': typeof PermissionNewIndexRouteRoute
   '/post/$title/': typeof PostTitleIndexRouteRoute
   '/post/new/': typeof PostNewIndexRouteRoute
   '/series/$name/': typeof SeriesNameIndexRouteRoute
@@ -247,10 +295,13 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/permission'
     | '/post'
     | '/series'
     | '/topic'
     | '/user'
+    | '/permission/$name'
+    | '/permission/new'
     | '/post/$title'
     | '/post/new'
     | '/series/$name'
@@ -262,10 +313,13 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/permission'
     | '/post'
     | '/series'
     | '/topic'
     | '/user'
+    | '/permission/$name'
+    | '/permission/new'
     | '/post/$title'
     | '/post/new'
     | '/series/$name'
@@ -277,10 +331,13 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/permission/'
     | '/post/'
     | '/series/'
     | '/topic/'
     | '/user/'
+    | '/permission/$name/'
+    | '/permission/new/'
     | '/post/$title/'
     | '/post/new/'
     | '/series/$name/'
@@ -294,10 +351,13 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   IndexRouteRoute: typeof IndexRouteRoute
+  PermissionIndexRouteRoute: typeof PermissionIndexRouteRoute
   PostIndexRouteRoute: typeof PostIndexRouteRoute
   SeriesIndexRouteRoute: typeof SeriesIndexRouteRoute
   TopicIndexRouteRoute: typeof TopicIndexRouteRoute
   UserIndexRouteRoute: typeof UserIndexRouteRoute
+  PermissionNameIndexRouteRoute: typeof PermissionNameIndexRouteRoute
+  PermissionNewIndexRouteRoute: typeof PermissionNewIndexRouteRoute
   PostTitleIndexRouteRoute: typeof PostTitleIndexRouteRoute
   PostNewIndexRouteRoute: typeof PostNewIndexRouteRoute
   SeriesNameIndexRouteRoute: typeof SeriesNameIndexRouteRoute
@@ -310,10 +370,13 @@ export interface RootRouteChildren {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRouteRoute: IndexRouteRoute,
+  PermissionIndexRouteRoute: PermissionIndexRouteRoute,
   PostIndexRouteRoute: PostIndexRouteRoute,
   SeriesIndexRouteRoute: SeriesIndexRouteRoute,
   TopicIndexRouteRoute: TopicIndexRouteRoute,
   UserIndexRouteRoute: UserIndexRouteRoute,
+  PermissionNameIndexRouteRoute: PermissionNameIndexRouteRoute,
+  PermissionNewIndexRouteRoute: PermissionNewIndexRouteRoute,
   PostTitleIndexRouteRoute: PostTitleIndexRouteRoute,
   PostNewIndexRouteRoute: PostNewIndexRouteRoute,
   SeriesNameIndexRouteRoute: SeriesNameIndexRouteRoute,
@@ -337,10 +400,13 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/permission/",
         "/post/",
         "/series/",
         "/topic/",
         "/user/",
+        "/permission/$name/",
+        "/permission/new/",
         "/post/$title/",
         "/post/new/",
         "/series/$name/",
@@ -354,6 +420,9 @@ export const routeTree = rootRoute
     "/": {
       "filePath": "index.route.tsx"
     },
+    "/permission/": {
+      "filePath": "permission/index.route.tsx"
+    },
     "/post/": {
       "filePath": "post/index.route.tsx"
     },
@@ -365,6 +434,12 @@ export const routeTree = rootRoute
     },
     "/user/": {
       "filePath": "user/index.route.tsx"
+    },
+    "/permission/$name/": {
+      "filePath": "permission/$name/index.route.tsx"
+    },
+    "/permission/new/": {
+      "filePath": "permission/new/index.route.tsx"
     },
     "/post/$title/": {
       "filePath": "post/$title/index.route.tsx"
