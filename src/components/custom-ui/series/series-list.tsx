@@ -4,20 +4,17 @@ import SeriesDataTable from "./series-data-table";
 import { Route } from "@/routes/series/index.route";
 
 function SeriesList() {
-  const { success, data } = Route.useLoaderData();
+	const { success, data } = Route.useLoaderData();
 
-  const [series, setSeries] = useState<Page<ReadSeriesDto>>();
+	const [series, setSeries] = useState<Page<ReadSeriesDto>>();
 
-  useEffect(() => {
-    if (success && data) {
-      setSeries(data);
-    }
-  }, [success, data])
+	useEffect(() => {
+		if (success && data) {
+			setSeries(data);
+		}
+	}, [success, data]);
 
-
-  return (
-    <SeriesDataTable series={series} />
-  );
+	return <SeriesDataTable series={series} />;
 }
 
 export default SeriesList;
