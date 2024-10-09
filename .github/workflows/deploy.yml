@@ -20,12 +20,6 @@ jobs:
     - name: Install expect
       run: sudo apt-get install expect
 
-    - name: Set up SSH for deployment
-      uses: webfactory/ssh-agent@v0.5.4
-      with:
-        ssh-private-key: |
-          ${{ secrets.SSH_PRIVATE_KEY }}
-
     - name: Add SSH key with passphrase
       run: |
         expect <<EOF
@@ -34,6 +28,13 @@ jobs:
         send "${{ secrets.SSH_PASSPHRASE }}\r"
         expect eof
         EOF
+
+    - name: Set up SSH for deployment
+      uses: webfactory/ssh-agent@v0.5.4
+      with:
+        ssh-private-key: |
+          ${{ secrets.SSH_PRIVATE_KEY }}
+
 
     - name: Deploy to server
       run: |
