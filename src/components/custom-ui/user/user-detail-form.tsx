@@ -1,11 +1,11 @@
-import z from "zod";
+import type z from "zod";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormField } from "@/components/ui/form";
-import { ReadUserDto } from "sssh-library";
+import type { ReadUserDto } from "sssh-library";
 import { req } from "@/lib/api";
 import { useNavigate } from "@tanstack/react-router";
 import { hasDiff } from "@/lib/utils";
@@ -16,9 +16,13 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Ellipsis } from "lucide-react";
-import SsshFormItem from "../common/sssh-form-item";
-import SsshDropdownMenuItem from "../common/sssh-dropdown-menu-item";
 import { UserSchema } from "@/lib/schema/user.schema";
+import { lazy } from "react";
+
+const SsshFormItem = lazy(() => import("../common/sssh-form-item"));
+const SsshDropdownMenuItem = lazy(
+	() => import("../common/sssh-dropdown-menu-item"),
+);
 
 function UserDetailForm() {
 	const navigate = useNavigate();
@@ -28,6 +32,7 @@ function UserDetailForm() {
 		resolver: zodResolver(UserSchema),
 		defaultValues: {
 			id: String(data.id),
+			email: String(data.email),
 			name: String(data.name),
 		},
 	});
@@ -38,7 +43,7 @@ function UserDetailForm() {
 			return;
 		}
 
-		if (confirm(`회원 정보를 수정하시겠습니까?`)) {
+		if (confirm("회원 정보를 수정하시겠습니까?")) {
 			const userResult = await req<ReadUserDto>("user", "put", { id, name });
 
 			if (userResult.success && userResult.data) {
@@ -49,7 +54,7 @@ function UserDetailForm() {
 
 	const functions = {
 		moveToPostMade: () => {
-			navigate({ to: "/post?where__authorName=" + data.name });
+			navigate({ to: `/post?where__authorName=${data.name}` });
 		},
 		managePermission: () => {
 			navigate({ to: `/user/${data.id}/permission` });

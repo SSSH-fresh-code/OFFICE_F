@@ -1,5 +1,5 @@
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 function SsshDropdownMenuItem({
 	children,

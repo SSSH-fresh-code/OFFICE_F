@@ -1,4 +1,4 @@
-import z from "zod";
+import type z from "zod";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -13,18 +13,20 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
-import { ReadTopicDto } from "sssh-library";
+import type { ReadTopicDto } from "sssh-library";
 import { req } from "@/lib/api";
 import { useNavigate } from "@tanstack/react-router";
 import { Route } from "@/routes/topic/$name/index.route";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
-	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Ellipsis } from "lucide-react";
-import SsshDropdownMenuItem from "../common/sssh-dropdown-menu-item";
+import { lazy } from "react";
+const SsshDropdownMenuItem = lazy(
+	() => import("../common/sssh-dropdown-menu-item"),
+);
 
 function TopicDetailForm() {
 	const navigate = useNavigate();
@@ -71,7 +73,7 @@ function TopicDetailForm() {
 		},
 		moveChildPosts: () => {
 			navigate({
-				to: "/post?where__topicId=" + data?.id,
+				to: `/post?where__topicId=${data?.id}`,
 			});
 		},
 	};

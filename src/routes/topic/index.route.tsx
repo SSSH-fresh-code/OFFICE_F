@@ -1,10 +1,12 @@
-import TopicList from "@/components/custom-ui/topic/topic-list";
 import { req } from "@/lib/api";
 import { PAGE_TITLE } from "@/lib/const/page-title.const";
 import useSsshStore from "@/lib/store/sssh.store";
 import { queryOptions } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { Page, ReadTopicDto } from "sssh-library";
+import { lazy } from "react";
+import type { Page, ReadTopicDto } from "sssh-library";
+
+const TopicList = lazy(() => import("@/components/custom-ui/topic/topic-list"));
 
 export const Route = createFileRoute("/topic/")({
 	beforeLoad: () => {

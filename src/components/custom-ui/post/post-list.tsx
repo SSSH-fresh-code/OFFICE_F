@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
-import { Page, ReadPostDto } from "sssh-library";
-import PostDataTable from "./post-data-table";
+import { lazy, useEffect, useState } from "react";
+import type { Page, ReadPostDto } from "sssh-library";
 import { Route } from "@/routes/post/index.route";
+
+const PostDataTable = lazy(() => import("./post-data-table"));
 
 function PostList() {
 	const { success, data } = Route.useLoaderData();

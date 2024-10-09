@@ -4,15 +4,10 @@ import { Toggle } from "@/components/ui/toggle";
 import { req } from "@/lib/api";
 import { PAGE_TITLE } from "@/lib/const/page-title.const";
 import { Route } from "@/routes/user/$id/permission/index.route";
-import { useQueryClient } from "@tanstack/react-query";
-import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { ReadUserDto } from "sssh-library";
+import type { ReadUserDto } from "sssh-library";
 
 function UserPermissionManage() {
-	const navigate = useNavigate();
-	const queryClient = useQueryClient();
-
 	const { user, permission } = Route.useLoaderData();
 
 	const oriPerm = user.permissions;
@@ -34,7 +29,7 @@ function UserPermissionManage() {
 				return;
 			}
 
-			if (confirm(`권한을 수정하시겠습니까?`)) {
+			if (confirm("권한을 수정하시겠습니까?")) {
 				const userPermissionResult = await req<ReadUserDto>(
 					"user/permission",
 					"put",
@@ -62,11 +57,11 @@ function UserPermissionManage() {
 			</h1>
 			<ScrollArea className="w-full h-48 md:h-96">
 				<div className="h-full w-full flex flex-col justify-center items-center gap-3">
-					{permission.map((p, idx) => {
+					{permission.map((p) => {
 						const { name, description } = p;
 						return (
 							<Toggle
-								id={`toggle-${idx}`}
+								key={`toggle-${p.name}`}
 								aria-label="Toggle bold"
 								className="w-full md:w-[480px]"
 								variant="outline"

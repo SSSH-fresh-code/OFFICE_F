@@ -1,10 +1,14 @@
-import SeriesList from "@/components/custom-ui/series/series-list";
 import { req } from "@/lib/api";
 import { PAGE_TITLE } from "@/lib/const/page-title.const";
 import useSsshStore from "@/lib/store/sssh.store";
 import { queryOptions } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { Page, ReadSeriesDto } from "sssh-library";
+import type { Page, ReadSeriesDto } from "sssh-library";
+import { lazy } from "react";
+
+const SeriesList = lazy(
+	() => import("@/components/custom-ui/series/series-list"),
+);
 
 export const Route = createFileRoute("/series/")({
 	beforeLoad: () => {

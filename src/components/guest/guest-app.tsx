@@ -1,7 +1,8 @@
-import { useState } from "react";
-import { ReadUserDto } from "sssh-library";
-import SignIn from "./sign-in";
-import SignUp from "./sign-up";
+import { lazy, useState } from "react";
+import type { ReadUserDto } from "sssh-library";
+
+const SignIn = lazy(() => import("./sign-in"));
+const SignUp = lazy(() => import("./sign-up"));
 
 interface GuestAppProps {
 	login: (user: ReadUserDto) => void;

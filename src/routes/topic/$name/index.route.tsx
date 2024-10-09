@@ -1,9 +1,13 @@
 import { req } from "@/lib/api";
 import { queryOptions } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { ReadTopicDto } from "sssh-library";
-import TopicDetailForm from "@/components/custom-ui/topic/topic-detail-form";
+import type { ReadTopicDto } from "sssh-library";
 import useSsshStore from "@/lib/store/sssh.store";
+import { lazy } from "react";
+
+const TopicDetailForm = lazy(
+	() => import("@/components/custom-ui/topic/topic-detail-form"),
+);
 
 export const Route = createFileRoute("/topic/$name/")({
 	beforeLoad: () => {

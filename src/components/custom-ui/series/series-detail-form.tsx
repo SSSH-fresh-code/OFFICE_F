@@ -1,4 +1,4 @@
-import z from "zod";
+import type z from "zod";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -12,7 +12,7 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
-import { ReadSeriesDto } from "sssh-library";
+import type { ReadSeriesDto } from "sssh-library";
 import { req } from "@/lib/api";
 import { useNavigate } from "@tanstack/react-router";
 import { SeriesSchema } from "@/lib/schema/series/series.schema";
@@ -32,7 +32,11 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Ellipsis } from "lucide-react";
-import SsshDropdownMenuItem from "../common/sssh-dropdown-menu-item";
+import { lazy } from "react";
+
+const SsshDropdownMenuItem = lazy(
+	() => import("../common/sssh-dropdown-menu-item"),
+);
 
 function SeriesDetailForm() {
 	const navigate = useNavigate();
@@ -62,7 +66,7 @@ function SeriesDetailForm() {
 			return;
 		}
 
-		if (confirm(`시리즈를 변경하시겠습니까?`)) {
+		if (confirm("시리즈를 변경하시겠습니까?")) {
 			const seriesResult = await req<ReadSeriesDto>("series", "put", {
 				id: Number(values.id),
 				name: values.name,
@@ -77,14 +81,14 @@ function SeriesDetailForm() {
 
 	const functions = {
 		moveToParentTopic: () => {
-			navigate({ to: "/topic/" + data.topic.name });
+			navigate({ to: `/topic/${data.topic.name}` });
 		},
 		moveToParentT: () => {
-			navigate({ to: "/topic/" + data.topic.name });
+			navigate({ to: `/topic/${data.topic.name}` });
 		},
 		moveChildPosts: () => {
 			navigate({
-				to: "/post?where__seriesId=" + data.id,
+				to: `/post?where__seriesId=${data.id}`,
 			});
 		},
 		remove: () => {
@@ -157,16 +161,15 @@ function SeriesDetailForm() {
 												</SelectTrigger>
 											</FormControl>
 											<SelectContent className="bg-white">
-												{topics?.data &&
-													topics.data.map((d) => (
-														<SelectItem
-															value={String(d.id)}
-															key={`select-${d.id}`}
-															className="cursor-pointer hover:bg-gray-100"
-														>
-															{d.name}
-														</SelectItem>
-													))}
+												{topics?.data?.map((d) => (
+													<SelectItem
+														value={String(d.id)}
+														key={`select-${d.id}`}
+														className="cursor-pointer hover:bg-gray-100"
+													>
+														{d.name}
+													</SelectItem>
+												))}
 											</SelectContent>
 										</Select>
 										<FormMessage />

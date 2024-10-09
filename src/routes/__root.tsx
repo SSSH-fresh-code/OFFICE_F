@@ -1,8 +1,10 @@
-import { createRootRouteWithContext } from "@tanstack/react-router";
-import App from "@/App";
-import useUserStore from "@/lib/store/user.store";
-import GuestApp from "@/components/guest/guest-app";
 import { QueryClient } from "@tanstack/react-query";
+import { createRootRouteWithContext } from "@tanstack/react-router";
+import useUserStore from "@/lib/store/user.store";
+import { lazy } from "react";
+
+const GuestApp = lazy(() => import("@/components/guest/guest-app"));
+const App = lazy(() => import("@/App"));
 
 export const Route = createRootRouteWithContext<{
 	queryClient: QueryClient;

@@ -1,11 +1,9 @@
 import { useNavigate } from "@tanstack/react-router";
-import { ColumnDef } from "@tanstack/react-table";
-import { convertUnderbar, Page, ReadSeriesDto } from "sssh-library";
-import {
-	SsshDataTable,
-	SsshDataTableHeader,
-	SsshDataTableOptions,
-} from "../common/sssh-data-table";
+import type { ColumnDef } from "@tanstack/react-table";
+import { convertUnderbar } from "sssh-library";
+import type { Page, ReadSeriesDto } from "sssh-library";
+import type { SsshDataTableOptions } from "../common/sssh-data-table";
+import { SsshDataTable, SsshDataTableHeader } from "../common/sssh-data-table";
 import { Button } from "@/components/ui/button";
 
 function SeriesDataTable({ series }: { series?: Page<ReadSeriesDto> }) {

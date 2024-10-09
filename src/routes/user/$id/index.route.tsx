@@ -1,9 +1,13 @@
-import UserDetailForm from "@/components/custom-ui/user/user-detail-form";
 import { req } from "@/lib/api";
 import useSsshStore from "@/lib/store/sssh.store";
 import { queryOptions } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { ReadUserDto } from "sssh-library";
+import type { ReadUserDto } from "sssh-library";
+import { lazy } from "react";
+
+const UserDetailForm = lazy(
+	() => import("@/components/custom-ui/user/user-detail-form"),
+);
 
 export const Route = createFileRoute("/user/$id/")({
 	beforeLoad: () => {

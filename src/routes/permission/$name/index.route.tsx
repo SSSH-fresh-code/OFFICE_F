@@ -1,9 +1,14 @@
-import PermissionDetailForm from "@/components/custom-ui/permission/permission-detail-form";
 import { req } from "@/lib/api";
 import useSsshStore from "@/lib/store/sssh.store";
 import { queryOptions } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { ReadPermissionDto } from "sssh-library";
+import type { ReadPermissionDto } from "sssh-library";
+
+import { lazy } from "react";
+
+const PermissionDetailForm = lazy(
+	() => import("@/components/custom-ui/permission/permission-detail-form"),
+);
 
 export const Route = createFileRoute("/permission/$name/")({
 	beforeLoad: () => {

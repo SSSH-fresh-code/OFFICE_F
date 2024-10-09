@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
-import { Page, ReadSeriesDto, ReadTopicDto } from "sssh-library";
-import SeriesDataTable from "./series-data-table";
+import { lazy, useEffect, useState } from "react";
+import type { Page, ReadSeriesDto } from "sssh-library";
 import { Route } from "@/routes/series/index.route";
+
+const SeriesDataTable = lazy(() => import("./series-data-table"));
 
 function SeriesList() {
 	const { success, data } = Route.useLoaderData();

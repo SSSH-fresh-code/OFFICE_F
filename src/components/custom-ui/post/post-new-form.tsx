@@ -1,4 +1,4 @@
-import z from "zod";
+import type z from "zod";
 import { req } from "@/lib/api";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
@@ -6,15 +6,8 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "@tanstack/react-router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "@/components/ui/form";
-import { ReadPostDto, ReadSeriesDto } from "sssh-library";
+import { Form, FormControl, FormField } from "@/components/ui/form";
+import type { ReadPostDto, ReadSeriesDto } from "sssh-library";
 import {
 	Select,
 	SelectContent,
@@ -25,7 +18,7 @@ import {
 import { PostSchema } from "@/lib/schema/post/post.schema";
 import { Textarea } from "@/components/ui/textarea";
 import { Route } from "@/routes/post/new/index.route";
-import { ReactNode, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { queryOptions, useQueryClient } from "@tanstack/react-query";
 import useUserStore from "@/lib/store/user.store";
 import SsshFormItem from "../common/sssh-form-item";
@@ -35,14 +28,14 @@ function PostNewForm() {
 	const { user } = useUserStore();
 	const { data } = Route.useLoaderData();
 
-	const queryClient = useQueryClient();
-
 	const [topicId, setTopicId] = useState<string>("");
 	const [series, setSeries] = useState<Pick<ReadSeriesDto, "name" | "id">[]>(
 		[],
 	);
 
 	useEffect(() => {
+		const queryClient = useQueryClient();
+
 		if (topicId) {
 			const seriesQueryOptions = queryOptions({
 				queryKey: ["optionForSelect", topicId],
@@ -51,7 +44,7 @@ function PostNewForm() {
 						`series/all/${topicId}`,
 						"get",
 					),
-				staleTime: Infinity,
+				staleTime: Number.POSITIVE_INFINITY,
 			});
 
 			queryClient
@@ -71,7 +64,7 @@ function PostNewForm() {
 			title: "",
 			content: "",
 			thumbnail: "",
-			authorName: user!.name,
+			authorName: user?.name,
 			topicId: "",
 			seriesId: "",
 		},
@@ -97,7 +90,7 @@ function PostNewForm() {
 			json.seriesId = Number(seriesId);
 		}
 
-		if (confirm(`게시글을 생성하시겠습니까?`)) {
+		if (confirm("게시글을 생성하시겠습니까?")) {
 			const postResult = await req<ReadPostDto>("post", "post", json);
 
 			if (postResult.success && postResult.data) {
@@ -157,16 +150,15 @@ function PostNewForm() {
 												</SelectTrigger>
 											</FormControl>
 											<SelectContent className="bg-white">
-												{data &&
-													data.map((d) => (
-														<SelectItem
-															value={String(d.id)}
-															key={`select-${d.id}`}
-															className="cursor-pointer hover:bg-gray-100"
-														>
-															{d.name}
-														</SelectItem>
-													))}
+												{data?.map((d) => (
+													<SelectItem
+														value={String(d.id)}
+														key={`select-${d.id}`}
+														className="cursor-pointer hover:bg-gray-100"
+													>
+														{d.name}
+													</SelectItem>
+												))}
 											</SelectContent>
 										</Select>
 									</SsshFormItem>
@@ -188,16 +180,15 @@ function PostNewForm() {
 												</SelectTrigger>
 											</FormControl>
 											<SelectContent className="bg-white">
-												{series &&
-													series.map((d) => (
-														<SelectItem
-															value={String(d.id)}
-															key={`select-series-${d.id}`}
-															className="cursor-pointer hover:bg-gray-100"
-														>
-															{d.name}
-														</SelectItem>
-													))}
+												{series?.map((d) => (
+													<SelectItem
+														value={String(d.id)}
+														key={`select-series-${d.id}`}
+														className="cursor-pointer hover:bg-gray-100"
+													>
+														{d.name}
+													</SelectItem>
+												))}
 											</SelectContent>
 										</Select>
 									</SsshFormItem>

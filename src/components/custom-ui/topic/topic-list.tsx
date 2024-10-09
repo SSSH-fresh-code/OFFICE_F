@@ -1,6 +1,6 @@
 import { Route } from "@/routes/topic/index.route";
 import { useEffect, useState } from "react";
-import { Page, ReadTopicDto } from "sssh-library";
+import type { Page, ReadTopicDto } from "sssh-library";
 import TopicDataTable from "./topic-data-table";
 
 function TopicList() {

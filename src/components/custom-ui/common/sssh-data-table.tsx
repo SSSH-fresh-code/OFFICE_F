@@ -15,13 +15,13 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { useNavigate } from "@tanstack/react-router";
+import type { ColumnDef } from "@tanstack/react-table";
 import {
-	ColumnDef,
 	flexRender,
 	getCoreRowModel,
 	useReactTable,
 } from "@tanstack/react-table";
-import { Page, PageInfo } from "sssh-library";
+import type { Page, PageInfo } from "sssh-library";
 
 export interface SsshDataTableOptions<TData> {
 	href: string;
@@ -61,13 +61,15 @@ export function SsshDataTable<TData, TValue>({
 								{headerGroup.headers.map((header, idx) => {
 									return (
 										<TableHead
-											key={header.id + "-" + idx}
-											className={
-												"text-[15px] text-center font-bold " +
-												(options.responsiveHide?.includes(header.id)
-													? "hidden md:table-cell"
-													: "")
-											}
+											key={`${header.id}-${idx}`}
+											className={`
+												text-[15px] text-center font-bold 
+												${
+													options.responsiveHide?.includes(header.id)
+														? "hidden md:table-cell"
+														: ""
+												}
+                      `}
 										>
 											{header.isPlaceholder
 												? null
@@ -85,15 +87,14 @@ export function SsshDataTable<TData, TValue>({
 						{table.getRowModel().rows?.length ? (
 							table.getRowModel().rows.map((row, idx) => (
 								<TableRow
-									key={row.id + "-" + idx}
+									key={`${row.id}-${idx}`}
 									data-state={row.getIsSelected() && "selected"}
 									className="cursor-pointer hover:bg-gray-100"
 									onClick={
-										options && options.key
-											? (a) => {
-													console.log(a);
+										options
+											? () => {
 													navigate({
-														to: options.href + row.original[options.key!],
+														to: options.href + row.original[options?.key],
 													});
 												}
 											: () => {}
@@ -101,13 +102,15 @@ export function SsshDataTable<TData, TValue>({
 								>
 									{row.getVisibleCells().map((cell, idx) => (
 										<TableCell
-											key={cell.id + "-" + idx}
-											className={
-												"text-[13px] text-center py-3 " +
-												(options.responsiveHide?.includes(cell.column.id)
-													? "hidden md:table-cell"
-													: "")
-											}
+											key={`${cell.id}-${idx}`}
+											className={`
+												text-[13px] text-center py-3
+												${
+													options.responsiveHide?.includes(cell.column.id)
+														? " hidden md:table-cell"
+														: ""
+												}
+											`}
 										>
 											{flexRender(
 												cell.column.columnDef.cell,
@@ -181,10 +184,10 @@ export function SsshDataTablePagination({
 						.map((i) => (
 							<PaginationItem
 								key={`page-${i}`}
-								className={
-									(i === current ? "bg-gray-200 font-bold" : "") +
-									" rounded-md hover:bg-gray-200 p-0.5"
-								}
+								className={`
+                   ${i === current ? "bg-gray-200 font-bold" : ""}
+                    rounded-md hover:bg-gray-200 p-0.5
+               `}
 							>
 								<PaginationLink href={`${href}?page=${i}`}>{i}</PaginationLink>
 							</PaginationItem>

@@ -1,19 +1,12 @@
-import z from "zod";
+import type z from "zod";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PermissionSchema } from "@/lib/schema/permission/permission.schema";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "@/components/ui/form";
-import { ReadPermissionDto, ReadTopicDto } from "sssh-library";
+import { Form, FormField } from "@/components/ui/form";
+import type { ReadPermissionDto } from "sssh-library";
 import { req } from "@/lib/api";
 import { useNavigate } from "@tanstack/react-router";
 import { Route } from "@/routes/permission/$name/index.route";
@@ -23,10 +16,10 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Ellipsis } from "lucide-react";
-import SsshDropdownMenuItem from "../common/sssh-dropdown-menu-item";
-import { hasDiff } from "@/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
-import SsshFormItem from "../common/sssh-form-item";
+import { lazy } from "react";
+
+const SsshFormItem = lazy(() => import("../common/sssh-form-item"));
 
 function PermissionDetailForm() {
 	const navigate = useNavigate();
@@ -115,7 +108,7 @@ function PermissionDetailForm() {
 											<Ellipsis />
 										</Button>
 									</DropdownMenuTrigger>
-									<DropdownMenuContent className="bg-white"></DropdownMenuContent>
+									<DropdownMenuContent className="bg-white" />
 								</DropdownMenu>
 								<Button className="mt-1" variant="outline" type="submit">
 									수정

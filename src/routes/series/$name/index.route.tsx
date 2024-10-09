@@ -1,9 +1,13 @@
-import SeriesDetailForm from "@/components/custom-ui/series/series-detail-form";
 import { req } from "@/lib/api";
 import useSsshStore from "@/lib/store/sssh.store";
 import { queryOptions } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { ReadSeriesDto } from "sssh-library";
+import type { ReadSeriesDto } from "sssh-library";
+import { lazy } from "react";
+
+const SeriesDetailForm = lazy(
+	() => import("@/components/custom-ui/series/series-detail-form"),
+);
 
 export const Route = createFileRoute("/series/$name/")({
 	beforeLoad: () => {

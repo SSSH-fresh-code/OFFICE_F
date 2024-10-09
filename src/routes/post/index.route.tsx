@@ -1,10 +1,12 @@
-import PostList from "@/components/custom-ui/post/post-list";
 import { req } from "@/lib/api";
 import { PAGE_TITLE } from "@/lib/const/page-title.const";
 import useSsshStore from "@/lib/store/sssh.store";
 import { queryOptions } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { Page, ReadPostDto } from "sssh-library";
+import type { Page, ReadPostDto } from "sssh-library";
+import { lazy } from "react";
+
+const PostList = lazy(() => import("@/components/custom-ui/post/post-list"));
 
 export const Route = createFileRoute("/post/")({
 	beforeLoad: () => {
@@ -42,13 +44,13 @@ export const Route = createFileRoute("/post/")({
 		};
 
 		if (
-			!isNaN(Number(where__seriesId)) &&
+			!Number.isNaN(Number(where__seriesId)) &&
 			String(where__seriesId) !== "NaN" &&
 			where__seriesId !== undefined
 		) {
 			dto["where__seriesId"] = where__seriesId;
 		} else if (
-			!isNaN(Number(where__topicId)) &&
+			!Number.isNaN(Number(where__topicId)) &&
 			String(where__topicId) !== "NaN" &&
 			where__topicId !== undefined
 		) {

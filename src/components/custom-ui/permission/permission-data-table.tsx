@@ -1,13 +1,9 @@
 import { useNavigate } from "@tanstack/react-router";
-import { ColumnDef } from "@tanstack/react-table";
-import { Page, ReadUserDto } from "sssh-library";
-import {
-	SsshDataTable,
-	SsshDataTableHeader,
-	SsshDataTableOptions,
-} from "../common/sssh-data-table";
+import type { ColumnDef } from "@tanstack/react-table";
+import type { Page, ReadUserDto } from "sssh-library";
+import { SsshDataTable, SsshDataTableHeader } from "../common/sssh-data-table";
+import type { SsshDataTableOptions } from "../common/sssh-data-table";
 import { Button } from "@/components/ui/button";
-import { SquareArrowOutUpRight } from "lucide-react";
 
 function UserDataTable({
 	users,

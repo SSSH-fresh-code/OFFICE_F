@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { req } from "@/lib/api";
-import { ReadUserDto } from "sssh-library";
+import type { ReadUserDto } from "sssh-library";
 
 interface LoginProps {
 	login: (user: ReadUserDto) => void;
@@ -96,7 +96,10 @@ function SignIn({ login, changeMode }: LoginProps) {
 								</FormItem>
 							)}
 						/>
-						<Button className="mt-5 bg-white" type="submit">
+						<Button
+							className="mt-5 bg-white text-black hover:bg-gray-200"
+							type="submit"
+						>
 							로그인
 						</Button>
 						<Button

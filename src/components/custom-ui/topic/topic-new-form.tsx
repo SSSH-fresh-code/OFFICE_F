@@ -1,7 +1,7 @@
-import z from "zod";
+import type z from "zod";
 import { req } from "@/lib/api";
 import { useForm } from "react-hook-form";
-import { ReadTopicDto } from "sssh-library";
+import type { ReadTopicDto } from "sssh-library";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "@tanstack/react-router";
@@ -41,7 +41,7 @@ function TopicNewForm() {
 				) {
 					navigate({ to: `/topic/${topicResult.data.name}` });
 				} else {
-					navigate({ to: `/topic` });
+					navigate({ to: "/topic" });
 				}
 			}
 		}

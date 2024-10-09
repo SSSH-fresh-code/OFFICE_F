@@ -4,7 +4,7 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 function SsshFormItem({
 	label,

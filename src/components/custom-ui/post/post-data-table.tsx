@@ -1,19 +1,11 @@
 import { useNavigate } from "@tanstack/react-router";
-import { ColumnDef } from "@tanstack/react-table";
-import {
-	convertUnderbar,
-	Page,
-	ReadPostDto,
-	ReadSeriesDto,
-	ReadTopicDto,
-} from "sssh-library";
-import {
-	SsshDataTable,
-	SsshDataTableHeader,
-	SsshDataTableOptions,
-} from "../common/sssh-data-table";
+import type { ColumnDef } from "@tanstack/react-table";
+import { convertUnderbar } from "sssh-library";
+import type { Page, ReadPostDto } from "sssh-library";
+import { SsshDataTable, SsshDataTableHeader } from "../common/sssh-data-table";
+import type { SsshDataTableOptions } from "../common/sssh-data-table";
 import { Button } from "@/components/ui/button";
-import { Image, ImageOff, X } from "lucide-react";
+import { Image, ImageOff } from "lucide-react";
 
 function PostDataTable({
 	posts,

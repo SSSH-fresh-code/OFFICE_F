@@ -1,11 +1,11 @@
-import z from "zod";
+import type z from "zod";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField } from "@/components/ui/form";
-import { ReadPostDto, ReadSeriesDto } from "sssh-library";
+import type { ReadPostDto, ReadSeriesDto } from "sssh-library";
 import { req } from "@/lib/api";
 import { useNavigate } from "@tanstack/react-router";
 import { hasDiff } from "@/lib/utils";
@@ -20,20 +20,21 @@ import { Route } from "@/routes/post/$title/index.route";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
-	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Ellipsis } from "lucide-react";
 import { PostSchema } from "@/lib/schema/post/post.schema";
-import { useEffect, useState } from "react";
-import SsshFormItem from "../common/sssh-form-item";
+import { lazy, useEffect, useState } from "react";
 import { queryOptions, useQueryClient } from "@tanstack/react-query";
 import { Textarea } from "@/components/ui/textarea";
-import SsshDropdownMenuItem from "../common/sssh-dropdown-menu-item";
+
+const SsshFormItem = lazy(() => import("../common/sssh-form-item"));
+const SsshDropdownMenuItem = lazy(
+	() => import("../common/sssh-dropdown-menu-item"),
+);
 
 function PostDetailForm() {
 	const navigate = useNavigate();
-	const queryClient = useQueryClient();
 	const {
 		post: { data },
 		series,
@@ -46,6 +47,7 @@ function PostDetailForm() {
 	>(series?.data ? series.data : []);
 
 	useEffect(() => {
+		const queryClient = useQueryClient();
 		if (topicId) {
 			const seriesQueryOptions = queryOptions({
 				queryKey: ["optionForSelect", topicId],
@@ -54,7 +56,7 @@ function PostDetailForm() {
 						`series/all/${topicId}`,
 						"get",
 					),
-				staleTime: Infinity,
+				staleTime: Number.POSITIVE_INFINITY,
 			});
 
 			queryClient
@@ -124,7 +126,7 @@ function PostDetailForm() {
 			json.seriesId = Number(seriesId);
 		}
 
-		if (confirm(`게시글을 변경하시겠습니까?`)) {
+		if (confirm("게시글을 변경하시겠습니까?")) {
 			const postResult = await req<ReadPostDto>("post", "put", json);
 
 			if (postResult.success && postResult.data) {
@@ -135,16 +137,16 @@ function PostDetailForm() {
 
 	const functions = {
 		moveToParentTopic: () => {
-			navigate({ to: "/topic/" + data.topic.name });
+			navigate({ to: `/topic/${data.topic.name}` });
 		},
 		moveToParentSeries: () => {
 			if (data.series) {
-				navigate({ to: "/series/" + data.series.name });
+				navigate({ to: `/series/${data.series.name}` });
 			}
 		},
 		moveToAnotherPostCurrentAutor: () => {
 			if (data.series) {
-				navigate({ to: "/post?where__authorName=" + data.author.name });
+				navigate({ to: `/post?where__authorName=${data.author.name}` });
 			}
 		},
 		remove: () => {
@@ -202,16 +204,15 @@ function PostDetailForm() {
 												</SelectTrigger>
 											</FormControl>
 											<SelectContent className="bg-white">
-												{topics.data &&
-													topics.data.map((d) => (
-														<SelectItem
-															value={String(d.id)}
-															key={`select-${d.id}`}
-															className="cursor-pointer hover:bg-gray-100"
-														>
-															{d.name}
-														</SelectItem>
-													))}
+												{topics.data?.map((d) => (
+													<SelectItem
+														value={String(d.id)}
+														key={`select-${d.id}`}
+														className="cursor-pointer hover:bg-gray-100"
+													>
+														{d.name}
+													</SelectItem>
+												))}
 											</SelectContent>
 										</Select>
 									</SsshFormItem>
@@ -225,7 +226,7 @@ function PostDetailForm() {
 										<Select
 											onValueChange={field.onChange}
 											defaultValue={field.value}
-											disabled={series.length < 1}
+											disabled={seriesList.length < 1}
 										>
 											<FormControl>
 												<SelectTrigger>
@@ -233,16 +234,15 @@ function PostDetailForm() {
 												</SelectTrigger>
 											</FormControl>
 											<SelectContent className="bg-white">
-												{seriesList &&
-													seriesList.map((d) => (
-														<SelectItem
-															value={String(d.id)}
-															key={`select-series-${d.id}`}
-															className="cursor-pointer hover:bg-gray-100"
-														>
-															{d.name}
-														</SelectItem>
-													))}
+												{seriesList?.map((d) => (
+													<SelectItem
+														value={String(d.id)}
+														key={`select-series-${d.id}`}
+														className="cursor-pointer hover:bg-gray-100"
+													>
+														{d.name}
+													</SelectItem>
+												))}
 											</SelectContent>
 										</Select>
 									</SsshFormItem>

@@ -1,4 +1,5 @@
-import { StateCreator, StoreApi, create } from "zustand";
+import type { StateCreator, StoreApi } from "zustand";
+import { create } from "zustand";
 import { persist, devtools } from "zustand/middleware";
 
 export interface SsshState {

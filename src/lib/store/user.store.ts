@@ -1,5 +1,6 @@
-import { ReadUserDto } from "sssh-library";
-import { StateCreator, StoreApi, create } from "zustand";
+import type { ReadUserDto } from "sssh-library";
+import type { StateCreator, StoreApi } from "zustand";
+import { create } from "zustand";
 import { persist, devtools } from "zustand/middleware";
 
 export interface UserState {

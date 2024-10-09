@@ -8,7 +8,7 @@ import {
 import useSsshStore from "@/lib/store/sssh.store";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { createFileRoute } from "@tanstack/react-router";
-import { convertUnderbar, ReadPostDto } from "sssh-library";
+import type { convertUnderbar, ReadPostDto } from "sssh-library";
 
 export const Route = createFileRoute("/")({
 	beforeLoad: () => {

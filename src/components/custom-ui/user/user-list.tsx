@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Page, ReadUserDto } from "sssh-library";
+import type { Page, ReadUserDto } from "sssh-library";
 import { Route } from "@/routes/user/index.route";
 import UserDataTable from "./user-data-table";
 

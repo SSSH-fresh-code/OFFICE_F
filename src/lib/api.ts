@@ -1,6 +1,6 @@
 import ky from "ky";
 import useUserStore from "./store/user.store";
-import {
+import type {
 	HttpMethod,
 	KyOptions,
 } from "node_modules/ky/distribution/types/options";

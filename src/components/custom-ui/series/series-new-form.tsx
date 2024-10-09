@@ -1,4 +1,4 @@
-import z from "zod";
+import type z from "zod";
 import { req } from "@/lib/api";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
@@ -15,7 +15,7 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { SeriesSchema } from "@/lib/schema/series/series.schema";
-import { ReadSeriesDto } from "sssh-library";
+import type { ReadSeriesDto } from "sssh-library";
 import { Route } from "@/routes/series/new/index.route";
 import {
 	Select,
@@ -52,7 +52,7 @@ function SeriesNewForm() {
 				) {
 					navigate({ to: `/series/${seriesResult.data.name}` });
 				} else {
-					navigate({ to: `/series` });
+					navigate({ to: "/series" });
 				}
 			}
 		}
@@ -98,16 +98,15 @@ function SeriesNewForm() {
 												</SelectTrigger>
 											</FormControl>
 											<SelectContent className="bg-white">
-												{data &&
-													data.map((d) => (
-														<SelectItem
-															value={String(d.id)}
-															key={`select-${d.id}`}
-															className="cursor-pointer hover:bg-gray-100"
-														>
-															{d.name}
-														</SelectItem>
-													))}
+												{data?.map((d) => (
+													<SelectItem
+														value={String(d.id)}
+														key={`select-${d.id}`}
+														className="cursor-pointer hover:bg-gray-100"
+													>
+														{d.name}
+													</SelectItem>
+												))}
 											</SelectContent>
 										</Select>
 										<FormMessage />

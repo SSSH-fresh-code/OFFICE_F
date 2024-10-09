@@ -13,7 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { req } from "@/lib/api";
-import { ReadUserDto } from "sssh-library";
+import type { ReadUserDto } from "sssh-library";
 
 interface SignUpProps {
 	changeMode: (mode: "in" | "up") => void;
