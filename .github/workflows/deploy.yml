@@ -17,18 +17,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Install expect
-      run: sudo apt-get install expect
-
-    - name: Add SSH key with passphrase
-      run: |
-        expect <<EOF
-        spawn ssh-add /home/runner/.ssh/id_rsa
-        expect "Enter passphrase"
-        send "${{ secrets.SSH_PASSPHRASE }}\r"
-        expect eof
-        EOF
-
     - name: Set up SSH for deployment
       uses: webfactory/ssh-agent@v0.5.4
       with:
