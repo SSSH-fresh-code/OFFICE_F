@@ -12,6 +12,7 @@ export const PAGE_TITLE = {
 	"/user/$id": "회원 상세",
 	"/user/$id/permission": "회원 권한 관리",
 	"/permission": "권한 목록",
+	"/chatbot": "챗봇 목록",
 } as const;
 
 export default PAGE_TITLE;
