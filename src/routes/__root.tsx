@@ -1,4 +1,4 @@
-import { QueryClient } from "@tanstack/react-query";
+import type { QueryClient } from "@tanstack/react-query";
 import { createRootRouteWithContext } from "@tanstack/react-router";
 import useUserStore from "@/lib/store/user.store";
 import { lazy } from "react";
@@ -10,6 +10,7 @@ export const Route = createRootRouteWithContext<{
 	queryClient: QueryClient;
 }>()({
 	component: Root,
+	preloadStaleTime: 0,
 });
 
 function Root() {

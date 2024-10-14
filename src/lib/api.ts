@@ -48,6 +48,7 @@ export async function req<T>(
 			}
 
 			alert(errorJson.message);
+			window.history.back();
 		}
 	}
 
