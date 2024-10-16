@@ -2,7 +2,7 @@ import type z from "zod";
 import { req } from "@/lib/api";
 import { useForm } from "react-hook-form";
 import { MessengerType } from "sssh-library";
-import type { Page, ReadChatBotDto, ReadChatDto } from "sssh-library";
+import type { Page, ReadChatDto } from "sssh-library";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "@tanstack/react-router";
@@ -19,7 +19,11 @@ import { ChatbotSchema } from "@/lib/schema/chat/chatbot.schema";
 import SsshFormItem from "../../common/sssh-form-item";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
-import { queryOptions, useQueryClient } from "@tanstack/react-query";
+import {
+	queryOptions,
+	useMutation,
+	useQueryClient,
+} from "@tanstack/react-query";
 import {
 	Select,
 	SelectContent,
@@ -32,6 +36,7 @@ import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Ellipsis } from "lucide-react";
 import { ChatBubbleIcon } from "@radix-ui/react-icons";
 import { Route } from "@/routes/chatbot/$id/index.route";
+import { readChatbotKey, updateChatbotApi } from "@/lib/api/chatbot-api";
 
 function ChatbotDetailForm() {
 	const navigate = useNavigate();
@@ -42,7 +47,11 @@ function ChatbotDetailForm() {
 	const [selectChat, setSelectChat] = useState<ReadChatDto>();
 	const [selectChats, setSelectChats] = useState<ReadChatDto[]>([]);
 
+	const queryClient = useQueryClient();
+
 	useEffect(() => {
+		form.reset();
+
 		if (type) {
 			setChats([]);
 			setSelectChat(undefined);
@@ -61,7 +70,7 @@ function ChatbotDetailForm() {
 			});
 
 			queryClient
-				.ensureQueryData(chatQueryOptions)
+				.fetchQuery(chatQueryOptions)
 				.then(({ data }) => {
 					setChats(data?.data ? data.data : []);
 				})
@@ -69,13 +78,25 @@ function ChatbotDetailForm() {
 					setChats(undefined);
 				});
 		}
-	}, [type, data.chats]);
+	}, [data, type, data.chats]);
 
-	const queryClient = useQueryClient();
+	const mutation = useMutation({
+		mutationFn: updateChatbotApi,
+		onSuccess: async (result) => {
+			queryClient.removeQueries({
+				queryKey: ["chatbot"],
+				type: "inactive",
+			});
+
+			if (result.success && result.data) {
+				alert("챗봇이 정상적으로 수정되었습니다.");
+			}
+		},
+	});
 
 	const form = useForm<z.infer<typeof ChatbotSchema>>({
 		resolver: zodResolver(ChatbotSchema),
-		defaultValues: {
+		values: {
 			id: data.id,
 			botId: data.botId,
 			token: data.token,
@@ -96,15 +117,7 @@ function ChatbotDetailForm() {
 		}
 
 		if (confirm(confirmMessage)) {
-			const chatbotResult = await req<ReadChatBotDto>(
-				"chat/bot",
-				"put",
-				values,
-			);
-
-			if (chatbotResult.success && chatbotResult.data) {
-				alert("챗봇이 정상적으로 수정되었습니다.");
-			}
+			mutation.mutate(values);
 		}
 	}
 
@@ -121,15 +134,7 @@ function ChatbotDetailForm() {
 		<>
 			<Card className="p-5 pt-3 bg-white bg-opacity-90">
 				<div className="flex justify-end">
-					<Button
-						variant="link"
-						onClick={() => {
-							navigate({
-								to: "/chatbot",
-								search: { page: 1, where__type: undefined },
-							});
-						}}
-					>
+					<Button variant="link" onClick={() => navigate({ to: ".." })}>
 						목록으로
 					</Button>
 				</div>

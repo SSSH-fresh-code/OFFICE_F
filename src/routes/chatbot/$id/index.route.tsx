@@ -1,16 +1,23 @@
 import ChatbotDetailForm from "@/components/custom-ui/chat/bot/chatbot-detail-form";
-import { req } from "@/lib/api";
+import { readChatbotApi, readChatbotKey } from "@/lib/api/chatbot-api";
 import useSsshStore from "@/lib/store/sssh.store";
+import { queryOptions } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import type { ReadChatBotDto } from "sssh-library";
 
 export const Route = createFileRoute("/chatbot/$id/")({
 	beforeLoad: () => {
 		useSsshStore.getState().setTitle("");
 	},
-	loader: async ({ params }) => {
-		return await req<ReadChatBotDto>(`chat/bot/${params.id}`, "get");
+	loader: async ({ params, context: { queryClient } }) => {
+		const id = Number(params.id);
+
+		const queryOption = queryOptions({
+			queryKey: readChatbotKey(id),
+			queryFn: () => readChatbotApi(id),
+			staleTime: Number.POSITIVE_INFINITY,
+		});
+
+		return await queryClient.fetchQuery(queryOption);
 	},
 	component: () => <ChatbotDetailForm />,
-	staleTime: 0,
 });
