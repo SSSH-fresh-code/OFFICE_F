@@ -1,6 +1,5 @@
 import type { Page, ReadChatBotDto } from "sssh-library";
 import { req } from "../api";
-import { waitForDebugger } from "inspector";
 
 /**
  * 챗봇 생성 - Post /chat/bot

@@ -1,8 +1,7 @@
 import type z from "zod";
-import { req } from "@/lib/api";
 import { useForm } from "react-hook-form";
 import { MessengerType } from "sssh-library";
-import type { Page, ReadChatBotDto, ReadChatDto } from "sssh-library";
+import type { ReadChatDto } from "sssh-library";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "@tanstack/react-router";
@@ -19,7 +18,7 @@ import { ChatbotSchema } from "@/lib/schema/chat/chatbot.schema";
 import SsshFormItem from "../../common/sssh-form-item";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
-import { queryOptions, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
 	Select,
 	SelectContent,
@@ -31,44 +30,31 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Ellipsis } from "lucide-react";
 import { ChatBubbleIcon } from "@radix-ui/react-icons";
+import { onAddChat } from "@/lib/util/chatbot/chatbot.util";
+import { readChatAllByTypeApi, readChatAllByTypeKey } from "@/lib/api/chat-api";
+import { createChatbotApi } from "@/lib/api/chatbot-api";
 
 function ChatbotNewForm() {
 	const navigate = useNavigate();
-	const [type, setType] = useState<string>("");
+	const [type, setType] = useState<MessengerType>(MessengerType.DISCORD);
 	const [chats, setChats] = useState<ReadChatDto[]>();
 	const [selectChat, setSelectChat] = useState<ReadChatDto>();
 	const [selectChats, setSelectChats] = useState<ReadChatDto[]>([]);
 
 	useEffect(() => {
 		if (type) {
-			setChats([]);
-			setSelectChat(undefined);
-			setSelectChats([]);
-			const chatQueryOptions = queryOptions({
-				queryKey: ["optionsForChatbot", type],
-				queryFn: () =>
-					req<Page<ReadChatDto>>("chat", "get", {
-						page: 1,
-						take: 9999,
-						orderby: "name",
-						direction: "asc",
-						where__type: type,
-					}),
-				staleTime: Number.POSITIVE_INFINITY,
+			init();
+			const query = useQuery({
+				queryKey: readChatAllByTypeKey(type),
+				queryFn: async () => await readChatAllByTypeApi(type),
 			});
 
-			queryClient
-				.ensureQueryData(chatQueryOptions)
-				.then(({ data }) => {
-					setChats(data?.data ? data.data : []);
-				})
-				.catch(() => {
-					setChats(undefined);
-				});
+			if (query.isSuccess) {
+				const chats = query.data?.data?.data;
+				setChats(chats ?? []);
+			}
 		}
 	}, [type]);
-
-	const queryClient = useQueryClient();
 
 	const form = useForm<z.infer<typeof ChatbotSchema>>({
 		resolver: zodResolver(ChatbotSchema),
@@ -82,44 +68,47 @@ function ChatbotNewForm() {
 		},
 	});
 
-	async function onSubmit(values: z.infer<typeof ChatbotSchema>) {
-		let confirmMessage = `[${values.type}] ${values.name} 챗봇을 생성하시겠습니까?`;
+	const { removeQueries } = useQueryClient();
+	const mutation = useMutation({
+		mutationFn: createChatbotApi,
+		onSuccess: async (result) => {
+			removeQueries({
+				queryKey: ["chatbot"],
+				type: "inactive",
+			});
 
-		if (selectChats.length < 1) {
-			confirmMessage = `추가하신 채팅방이 없습니다. 그래도\n${confirmMessage}`;
-		} else {
-			values.chatIds = selectChats.map((c) => String(c.id));
-		}
-
-		if (confirm(confirmMessage)) {
-			const chatbotResult = await req<ReadChatBotDto>(
-				"chat/bot",
-				"post",
-				values,
-			);
-
-			if (chatbotResult.success && chatbotResult.data) {
+			if (result.success && result.data) {
 				if (
 					confirm(
 						"챗봇이 정상적으로 생성되었습니다.\n해당 주제로 이동하시겠습니까?",
 					)
 				) {
-					navigate({ to: `/chatbot/${chatbotResult.data.id}` });
+					navigate({ to: `/chatbot/${result.data.id}` });
 				} else {
 					navigate({ to: "/chatbot" });
 				}
 			}
+		},
+	});
+
+	async function onSubmit(values: z.infer<typeof ChatbotSchema>) {
+		const confirmMessage = `[${values.type}] ${values.name} 챗봇을 생성하시겠습니까?`;
+
+		if (confirm(confirmMessage)) {
+			values.chatIds = selectChats.map((c) => String(c.id));
+			mutation.mutate(values);
 		}
 	}
 
-	const onAddChat = (chat: ReadChatDto | undefined) => {
-		if (!chat) return;
+	const onAddChatClick = () => {
+		const chats = onAddChat(selectChat, selectChats);
+		if (chats) setSelectChats(chats);
+	};
 
-		if (selectChats.some((c) => c.id === chat.id)) {
-			alert("중복된 채팅방입니다! 다른 채팅방을 추가해주세요.");
-		} else if (confirm(`'${chat.name}' 채팅방을 추가하시겠습니까?`)) {
-			setSelectChats([...selectChats, chat]);
-		}
+	const init = () => {
+		setChats([]);
+		setSelectChat(undefined);
+		setSelectChats([]);
 	};
 
 	return (
@@ -176,7 +165,7 @@ function ChatbotNewForm() {
 													return false;
 												}
 
-												setType(e);
+												setType(e as MessengerType);
 												form.resetField("chatIds");
 												field.onChange(e);
 											}}
@@ -237,7 +226,7 @@ function ChatbotNewForm() {
 									<Button
 										className="w-full rounded-s-none bg-gray-800"
 										disabled={!selectChat}
-										onClick={() => onAddChat(selectChat)}
+										onClick={onAddChatClick}
 									>
 										추가
 									</Button>

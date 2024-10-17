@@ -22,6 +22,7 @@ import { useEffect, useState } from "react";
 import {
 	queryOptions,
 	useMutation,
+	useQuery,
 	useQueryClient,
 } from "@tanstack/react-query";
 import {
@@ -36,63 +37,32 @@ import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Ellipsis } from "lucide-react";
 import { ChatBubbleIcon } from "@radix-ui/react-icons";
 import { Route } from "@/routes/chatbot/$id/index.route";
-import { readChatbotKey, updateChatbotApi } from "@/lib/api/chatbot-api";
+import { updateChatbotApi } from "@/lib/api/chatbot-api";
+import { readChatAllByTypeApi, readChatAllByTypeKey } from "@/lib/api/chat-api";
 
 function ChatbotDetailForm() {
 	const navigate = useNavigate();
 	const { data } = Route.useLoaderData();
 	if (!data) return <></>;
-	const [type, setType] = useState<string>(data.type);
+	const [type, setType] = useState<MessengerType>(data.type);
 	const [chats, setChats] = useState<ReadChatDto[]>();
 	const [selectChat, setSelectChat] = useState<ReadChatDto>();
 	const [selectChats, setSelectChats] = useState<ReadChatDto[]>([]);
 
-	const queryClient = useQueryClient();
-
 	useEffect(() => {
-		form.reset();
-
+		init(data.chats);
 		if (type) {
-			setChats([]);
-			setSelectChat(undefined);
-			setSelectChats(data.chats);
-			const chatQueryOptions = queryOptions({
-				queryKey: ["optionsForChatbot", type],
-				queryFn: () =>
-					req<Page<ReadChatDto>>("chat", "get", {
-						page: 1,
-						take: 9999,
-						orderby: "name",
-						direction: "asc",
-						where__type: type,
-					}),
-				staleTime: Number.POSITIVE_INFINITY,
+			const query = useQuery({
+				queryKey: readChatAllByTypeKey(type),
+				queryFn: async () => await readChatAllByTypeApi(type),
 			});
 
-			queryClient
-				.fetchQuery(chatQueryOptions)
-				.then(({ data }) => {
-					setChats(data?.data ? data.data : []);
-				})
-				.catch(() => {
-					setChats(undefined);
-				});
+			if (query.isSuccess) {
+				const chats = query.data?.data?.data;
+				setChats(chats ?? []);
+			}
 		}
 	}, [data, type, data.chats]);
-
-	const mutation = useMutation({
-		mutationFn: updateChatbotApi,
-		onSuccess: async (result) => {
-			queryClient.removeQueries({
-				queryKey: ["chatbot"],
-				type: "inactive",
-			});
-
-			if (result.success && result.data) {
-				alert("챗봇이 정상적으로 수정되었습니다.");
-			}
-		},
-	});
 
 	const form = useForm<z.infer<typeof ChatbotSchema>>({
 		resolver: zodResolver(ChatbotSchema),
@@ -107,19 +77,35 @@ function ChatbotDetailForm() {
 		},
 	});
 
-	async function onSubmit(values: z.infer<typeof ChatbotSchema>) {
-		let confirmMessage = `[${values.type}] ${values.name} 챗봇을 수정하시겠습니까?`;
+	const { removeQueries } = useQueryClient();
+	const mutation = useMutation({
+		mutationFn: updateChatbotApi,
+		onSuccess: async (result) => {
+			removeQueries({
+				queryKey: ["chatbot"],
+				type: "inactive",
+			});
 
-		if (selectChats.length < 1) {
-			confirmMessage = `추가하신 채팅방이 없습니다. 그래도\n${confirmMessage}`;
-		} else {
-			values.chatIds = selectChats.map((c) => String(c.id));
-		}
+			if (result.success && result.data) {
+				alert("챗봇이 정상적으로 수정되었습니다.");
+			}
+		},
+	});
+
+	async function onSubmit(values: z.infer<typeof ChatbotSchema>) {
+		const confirmMessage = `[${values.type}] ${values.name} 챗봇을 수정하시겠습니까?`;
 
 		if (confirm(confirmMessage)) {
+			values.chatIds = selectChats.map((c) => String(c.id));
 			mutation.mutate(values);
 		}
 	}
+
+	const init = (chats: ReadChatDto[]) => {
+		setChats([]);
+		setSelectChat(undefined);
+		setSelectChats(chats);
+	};
 
 	const onAddChat = (chat: ReadChatDto | undefined) => {
 		if (!chat) return;
@@ -130,6 +116,7 @@ function ChatbotDetailForm() {
 			setSelectChats([...selectChats, chat]);
 		}
 	};
+
 	return (
 		<>
 			<Card className="p-5 pt-3 bg-white bg-opacity-90">

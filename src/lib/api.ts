@@ -45,10 +45,11 @@ export async function req<T>(
 			if ([401, 403].includes(errorJson.statusCode)) {
 				location.href = "/";
 				useUserStore.getState().logout();
+			} else {
+				window.history.back();
 			}
 
 			alert(errorJson.message);
-			window.history.back();
 		}
 	}
 

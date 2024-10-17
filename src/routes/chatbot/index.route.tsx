@@ -26,14 +26,11 @@ export const Route = createFileRoute("/chatbot/")({
 	},
 	loaderDeps: ({ search }) => search,
 	loader: async ({ deps, context: { queryClient } }) => {
-		const allQueries = queryClient.getQueriesData({});
-		console.log("All Cached Queries:", allQueries);
 		const keys = readChatbotsKey(deps);
 
 		const postsQueryOptions = queryOptions({
 			queryKey: keys,
 			queryFn: () => readChatbotsApi(deps),
-			staleTime: Number.POSITIVE_INFINITY,
 		});
 
 		return await queryClient.fetchQuery(postsQueryOptions);
