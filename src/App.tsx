@@ -56,7 +56,7 @@ function App() {
 							<Button
 								className="w-full"
 								variant="link"
-								onClick={() => onClickMenu("/chat")}
+								onClick={() => onClickMenu("/chat/select")}
 							>
 								채팅방 관리
 							</Button>

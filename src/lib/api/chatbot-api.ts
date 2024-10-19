@@ -9,11 +9,11 @@ export const createChatbotApi = (body: object) =>
 	req<ReadChatBotDto>("chat/bot", "post", body);
 
 /**
- * 챗봇 생성 - Post /chat/bot
+ * 챗봇 생성 - Put /chat/bot
  * @param body object
  */
 export const updateChatbotApi = (body: object) =>
-	req<ReadChatBotDto>("chat/bot", "put", body);
+	req<void>("chat/bot", "put", body);
 
 /**
  * 챗봇 - get /chat/bot keys

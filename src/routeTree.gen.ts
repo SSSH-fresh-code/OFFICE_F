@@ -18,6 +18,7 @@ import { Route as SeriesIndexRouteImport } from './routes/series/index.route'
 import { Route as PostIndexRouteImport } from './routes/post/index.route'
 import { Route as PermissionIndexRouteImport } from './routes/permission/index.route'
 import { Route as ChatbotIndexRouteImport } from './routes/chatbot/index.route'
+import { Route as ChatIndexRouteImport } from './routes/chat/index.route'
 import { Route as UserIdIndexRouteImport } from './routes/user/$id/index.route'
 import { Route as TopicNewIndexRouteImport } from './routes/topic/new/index.route'
 import { Route as TopicNameIndexRouteImport } from './routes/topic/$name/index.route'
@@ -29,6 +30,9 @@ import { Route as PermissionNewIndexRouteImport } from './routes/permission/new/
 import { Route as PermissionNameIndexRouteImport } from './routes/permission/$name/index.route'
 import { Route as ChatbotNewIndexRouteImport } from './routes/chatbot/new/index.route'
 import { Route as ChatbotIdIndexRouteImport } from './routes/chatbot/$id/index.route'
+import { Route as ChatSelectIndexRouteImport } from './routes/chat/select/index.route'
+import { Route as ChatNewIndexRouteImport } from './routes/chat/new/index.route'
+import { Route as ChatIdIndexRouteImport } from './routes/chat/$id/index.route'
 import { Route as UserIdPermissionIndexRouteImport } from './routes/user/$id/permission/index.route'
 
 // Create/Update Routes
@@ -65,6 +69,11 @@ const PermissionIndexRouteRoute = PermissionIndexRouteImport.update({
 
 const ChatbotIndexRouteRoute = ChatbotIndexRouteImport.update({
   path: '/chatbot/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ChatIndexRouteRoute = ChatIndexRouteImport.update({
+  path: '/chat/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -123,6 +132,21 @@ const ChatbotIdIndexRouteRoute = ChatbotIdIndexRouteImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const ChatSelectIndexRouteRoute = ChatSelectIndexRouteImport.update({
+  path: '/chat/select/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ChatNewIndexRouteRoute = ChatNewIndexRouteImport.update({
+  path: '/chat/new/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ChatIdIndexRouteRoute = ChatIdIndexRouteImport.update({
+  path: '/chat/$id/',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const UserIdPermissionIndexRouteRoute = UserIdPermissionIndexRouteImport.update(
   {
     path: '/user/$id/permission/',
@@ -139,6 +163,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/chat/': {
+      id: '/chat/'
+      path: '/chat'
+      fullPath: '/chat'
+      preLoaderRoute: typeof ChatIndexRouteImport
       parentRoute: typeof rootRoute
     }
     '/chatbot/': {
@@ -181,6 +212,27 @@ declare module '@tanstack/react-router' {
       path: '/user'
       fullPath: '/user'
       preLoaderRoute: typeof UserIndexRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/chat/$id/': {
+      id: '/chat/$id/'
+      path: '/chat/$id'
+      fullPath: '/chat/$id'
+      preLoaderRoute: typeof ChatIdIndexRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/chat/new/': {
+      id: '/chat/new/'
+      path: '/chat/new'
+      fullPath: '/chat/new'
+      preLoaderRoute: typeof ChatNewIndexRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/chat/select/': {
+      id: '/chat/select/'
+      path: '/chat/select'
+      fullPath: '/chat/select'
+      preLoaderRoute: typeof ChatSelectIndexRouteImport
       parentRoute: typeof rootRoute
     }
     '/chatbot/$id/': {
@@ -274,12 +326,16 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRouteRoute
+  '/chat': typeof ChatIndexRouteRoute
   '/chatbot': typeof ChatbotIndexRouteRoute
   '/permission': typeof PermissionIndexRouteRoute
   '/post': typeof PostIndexRouteRoute
   '/series': typeof SeriesIndexRouteRoute
   '/topic': typeof TopicIndexRouteRoute
   '/user': typeof UserIndexRouteRoute
+  '/chat/$id': typeof ChatIdIndexRouteRoute
+  '/chat/new': typeof ChatNewIndexRouteRoute
+  '/chat/select': typeof ChatSelectIndexRouteRoute
   '/chatbot/$id': typeof ChatbotIdIndexRouteRoute
   '/chatbot/new': typeof ChatbotNewIndexRouteRoute
   '/permission/$name': typeof PermissionNameIndexRouteRoute
@@ -296,12 +352,16 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexRouteRoute
+  '/chat': typeof ChatIndexRouteRoute
   '/chatbot': typeof ChatbotIndexRouteRoute
   '/permission': typeof PermissionIndexRouteRoute
   '/post': typeof PostIndexRouteRoute
   '/series': typeof SeriesIndexRouteRoute
   '/topic': typeof TopicIndexRouteRoute
   '/user': typeof UserIndexRouteRoute
+  '/chat/$id': typeof ChatIdIndexRouteRoute
+  '/chat/new': typeof ChatNewIndexRouteRoute
+  '/chat/select': typeof ChatSelectIndexRouteRoute
   '/chatbot/$id': typeof ChatbotIdIndexRouteRoute
   '/chatbot/new': typeof ChatbotNewIndexRouteRoute
   '/permission/$name': typeof PermissionNameIndexRouteRoute
@@ -319,12 +379,16 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRouteRoute
+  '/chat/': typeof ChatIndexRouteRoute
   '/chatbot/': typeof ChatbotIndexRouteRoute
   '/permission/': typeof PermissionIndexRouteRoute
   '/post/': typeof PostIndexRouteRoute
   '/series/': typeof SeriesIndexRouteRoute
   '/topic/': typeof TopicIndexRouteRoute
   '/user/': typeof UserIndexRouteRoute
+  '/chat/$id/': typeof ChatIdIndexRouteRoute
+  '/chat/new/': typeof ChatNewIndexRouteRoute
+  '/chat/select/': typeof ChatSelectIndexRouteRoute
   '/chatbot/$id/': typeof ChatbotIdIndexRouteRoute
   '/chatbot/new/': typeof ChatbotNewIndexRouteRoute
   '/permission/$name/': typeof PermissionNameIndexRouteRoute
@@ -343,12 +407,16 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/chat'
     | '/chatbot'
     | '/permission'
     | '/post'
     | '/series'
     | '/topic'
     | '/user'
+    | '/chat/$id'
+    | '/chat/new'
+    | '/chat/select'
     | '/chatbot/$id'
     | '/chatbot/new'
     | '/permission/$name'
@@ -364,12 +432,16 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/chat'
     | '/chatbot'
     | '/permission'
     | '/post'
     | '/series'
     | '/topic'
     | '/user'
+    | '/chat/$id'
+    | '/chat/new'
+    | '/chat/select'
     | '/chatbot/$id'
     | '/chatbot/new'
     | '/permission/$name'
@@ -385,12 +457,16 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/chat/'
     | '/chatbot/'
     | '/permission/'
     | '/post/'
     | '/series/'
     | '/topic/'
     | '/user/'
+    | '/chat/$id/'
+    | '/chat/new/'
+    | '/chat/select/'
     | '/chatbot/$id/'
     | '/chatbot/new/'
     | '/permission/$name/'
@@ -408,12 +484,16 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   IndexRouteRoute: typeof IndexRouteRoute
+  ChatIndexRouteRoute: typeof ChatIndexRouteRoute
   ChatbotIndexRouteRoute: typeof ChatbotIndexRouteRoute
   PermissionIndexRouteRoute: typeof PermissionIndexRouteRoute
   PostIndexRouteRoute: typeof PostIndexRouteRoute
   SeriesIndexRouteRoute: typeof SeriesIndexRouteRoute
   TopicIndexRouteRoute: typeof TopicIndexRouteRoute
   UserIndexRouteRoute: typeof UserIndexRouteRoute
+  ChatIdIndexRouteRoute: typeof ChatIdIndexRouteRoute
+  ChatNewIndexRouteRoute: typeof ChatNewIndexRouteRoute
+  ChatSelectIndexRouteRoute: typeof ChatSelectIndexRouteRoute
   ChatbotIdIndexRouteRoute: typeof ChatbotIdIndexRouteRoute
   ChatbotNewIndexRouteRoute: typeof ChatbotNewIndexRouteRoute
   PermissionNameIndexRouteRoute: typeof PermissionNameIndexRouteRoute
@@ -430,12 +510,16 @@ export interface RootRouteChildren {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRouteRoute: IndexRouteRoute,
+  ChatIndexRouteRoute: ChatIndexRouteRoute,
   ChatbotIndexRouteRoute: ChatbotIndexRouteRoute,
   PermissionIndexRouteRoute: PermissionIndexRouteRoute,
   PostIndexRouteRoute: PostIndexRouteRoute,
   SeriesIndexRouteRoute: SeriesIndexRouteRoute,
   TopicIndexRouteRoute: TopicIndexRouteRoute,
   UserIndexRouteRoute: UserIndexRouteRoute,
+  ChatIdIndexRouteRoute: ChatIdIndexRouteRoute,
+  ChatNewIndexRouteRoute: ChatNewIndexRouteRoute,
+  ChatSelectIndexRouteRoute: ChatSelectIndexRouteRoute,
   ChatbotIdIndexRouteRoute: ChatbotIdIndexRouteRoute,
   ChatbotNewIndexRouteRoute: ChatbotNewIndexRouteRoute,
   PermissionNameIndexRouteRoute: PermissionNameIndexRouteRoute,
@@ -463,12 +547,16 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/chat/",
         "/chatbot/",
         "/permission/",
         "/post/",
         "/series/",
         "/topic/",
         "/user/",
+        "/chat/$id/",
+        "/chat/new/",
+        "/chat/select/",
         "/chatbot/$id/",
         "/chatbot/new/",
         "/permission/$name/",
@@ -485,6 +573,9 @@ export const routeTree = rootRoute
     },
     "/": {
       "filePath": "index.route.tsx"
+    },
+    "/chat/": {
+      "filePath": "chat/index.route.tsx"
     },
     "/chatbot/": {
       "filePath": "chatbot/index.route.tsx"
@@ -503,6 +594,15 @@ export const routeTree = rootRoute
     },
     "/user/": {
       "filePath": "user/index.route.tsx"
+    },
+    "/chat/$id/": {
+      "filePath": "chat/$id/index.route.tsx"
+    },
+    "/chat/new/": {
+      "filePath": "chat/new/index.route.tsx"
+    },
+    "/chat/select/": {
+      "filePath": "chat/select/index.route.tsx"
     },
     "/chatbot/$id/": {
       "filePath": "chatbot/$id/index.route.tsx"

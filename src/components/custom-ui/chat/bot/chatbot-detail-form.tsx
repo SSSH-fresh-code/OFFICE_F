@@ -1,8 +1,7 @@
 import type z from "zod";
-import { req } from "@/lib/api";
 import { useForm } from "react-hook-form";
 import { MessengerType } from "sssh-library";
-import type { Page, ReadChatDto } from "sssh-library";
+import type { ReadChatDto } from "sssh-library";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "@tanstack/react-router";
@@ -22,7 +21,6 @@ import { useEffect, useState } from "react";
 import {
 	queryOptions,
 	useMutation,
-	useQuery,
 	useQueryClient,
 } from "@tanstack/react-query";
 import {
@@ -52,17 +50,17 @@ function ChatbotDetailForm() {
 	useEffect(() => {
 		init(data.chats);
 		if (type) {
-			const query = useQuery({
+			const option = queryOptions({
 				queryKey: readChatAllByTypeKey(type),
 				queryFn: async () => await readChatAllByTypeApi(type),
 			});
 
-			if (query.isSuccess) {
-				const chats = query.data?.data?.data;
-				setChats(chats ?? []);
-			}
+			queryClient
+				.fetchQuery(option)
+				.then((i) => setChats(i.data?.data))
+				.catch(() => setChats([]));
 		}
-	}, [data, type, data.chats]);
+	}, [data, type]);
 
 	const form = useForm<z.infer<typeof ChatbotSchema>>({
 		resolver: zodResolver(ChatbotSchema),
@@ -77,11 +75,11 @@ function ChatbotDetailForm() {
 		},
 	});
 
-	const { removeQueries } = useQueryClient();
+	const queryClient = useQueryClient();
 	const mutation = useMutation({
 		mutationFn: updateChatbotApi,
 		onSuccess: async (result) => {
-			removeQueries({
+			queryClient.removeQueries({
 				queryKey: ["chatbot"],
 				type: "inactive",
 			});
@@ -96,7 +94,7 @@ function ChatbotDetailForm() {
 		const confirmMessage = `[${values.type}] ${values.name} 챗봇을 수정하시겠습니까?`;
 
 		if (confirm(confirmMessage)) {
-			values.chatIds = selectChats.map((c) => String(c.id));
+			values.chatIds = selectChats.map((c) => Number(c.id));
 			mutation.mutate(values);
 		}
 	}
@@ -107,7 +105,11 @@ function ChatbotDetailForm() {
 		setSelectChats(chats);
 	};
 
-	const onAddChat = (chat: ReadChatDto | undefined) => {
+	const onAddChat = (
+		event: React.MouseEvent<HTMLButtonElement>,
+		chat: ReadChatDto | undefined,
+	) => {
+		event.preventDefault();
 		if (!chat) return;
 
 		if (selectChats.some((c) => c.id === chat.id)) {
@@ -166,7 +168,7 @@ function ChatbotDetailForm() {
 													return false;
 												}
 
-												setType(e);
+												setType(e as MessengerType);
 												form.resetField("chatIds");
 												field.onChange(e);
 											}}
@@ -227,7 +229,7 @@ function ChatbotDetailForm() {
 									<Button
 										className="w-full rounded-s-none bg-gray-800"
 										disabled={!selectChat}
-										onClick={() => onAddChat(selectChat)}
+										onClick={(e) => onAddChat(e, selectChat)}
 									>
 										추가
 									</Button>

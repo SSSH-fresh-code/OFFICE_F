@@ -18,13 +18,17 @@ import { ChatbotSchema } from "@/lib/schema/chat/chatbot.schema";
 import SsshFormItem from "../../common/sssh-form-item";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+	queryOptions,
+	useMutation,
+	useQueryClient,
+} from "@tanstack/react-query";
 import {
 	Select,
-	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
+	SelectContent,
 } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Alert, AlertTitle } from "@/components/ui/alert";
@@ -44,15 +48,15 @@ function ChatbotNewForm() {
 	useEffect(() => {
 		if (type) {
 			init();
-			const query = useQuery({
+			const option = queryOptions({
 				queryKey: readChatAllByTypeKey(type),
 				queryFn: async () => await readChatAllByTypeApi(type),
 			});
 
-			if (query.isSuccess) {
-				const chats = query.data?.data?.data;
-				setChats(chats ?? []);
-			}
+			queryClient
+				.fetchQuery(option)
+				.then((i) => setChats(i.data?.data))
+				.catch(() => setChats([]));
 		}
 	}, [type]);
 
@@ -68,11 +72,11 @@ function ChatbotNewForm() {
 		},
 	});
 
-	const { removeQueries } = useQueryClient();
+	const queryClient = useQueryClient();
 	const mutation = useMutation({
 		mutationFn: createChatbotApi,
 		onSuccess: async (result) => {
-			removeQueries({
+			queryClient.removeQueries({
 				queryKey: ["chatbot"],
 				type: "inactive",
 			});
@@ -95,7 +99,7 @@ function ChatbotNewForm() {
 		const confirmMessage = `[${values.type}] ${values.name} 챗봇을 생성하시겠습니까?`;
 
 		if (confirm(confirmMessage)) {
-			values.chatIds = selectChats.map((c) => String(c.id));
+			values.chatIds = selectChats.map((c) => Number(c.id));
 			mutation.mutate(values);
 		}
 	}
