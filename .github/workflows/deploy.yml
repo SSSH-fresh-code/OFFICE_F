@@ -36,4 +36,4 @@ jobs:
         
     - name: Deploy to server
       run: |
-        ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }} 'cd ~/OFFICE_F && bash /scripts/office/build_push.sh'
+        ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }} 'cd ~/OFFICE_F && zsh /scripts/office/build_push.sh'
