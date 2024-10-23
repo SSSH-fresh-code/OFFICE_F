@@ -60,6 +60,20 @@ function App() {
 							>
 								채팅방 관리
 							</Button>
+							<Button
+								className="w-full"
+								variant="link"
+								onClick={() => onClickMenu("/chat/send")}
+							>
+								메세지 전송
+							</Button>
+							<Button
+								className="w-full"
+								variant="link"
+								onClick={() => onClickMenu("/chat/logs")}
+							>
+								메세지 로그 확인
+							</Button>
 							<Separator className="my-1 bg-gray-200" />
 							<p className="font-bold text-center mt-3 mb-2">회원/권한 관리</p>
 							<Button

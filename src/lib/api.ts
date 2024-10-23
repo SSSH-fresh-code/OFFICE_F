@@ -42,9 +42,11 @@ export async function req<T>(
 		if (error.name === "HTTPError") {
 			const errorJson = await error.response.json();
 
-			if ([401, 403].includes(errorJson.statusCode)) {
+			if (401 === errorJson.statusCode) {
 				location.href = "/";
 				useUserStore.getState().logout();
+			} else if (403 === errorJson.statusCode) {
+				location.href = "/";
 			} else {
 				window.history.back();
 			}
