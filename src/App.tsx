@@ -27,7 +27,7 @@ function App() {
 	return (
 		<>
 			<header className="grid grid-cols-3 w-full p-3 shadow">
-				<div></div>
+				<div />
 				<div
 					className="flex justify-center items-center cursor-pointer font-bold text-2xl space-x-3"
 					onClick={() => navigate({ to: "/" })}
@@ -44,6 +44,36 @@ function App() {
 							<SheetHeader>
 								<SheetTitle />
 							</SheetHeader>
+							<Separator className="my-1 bg-gray-200" />
+							<p className="font-bold text-center mt-3 mb-2">챗봇 관리</p>
+							<Button
+								className="w-full"
+								variant="link"
+								onClick={() => onClickMenu("/chatbot")}
+							>
+								챗봇 관리
+							</Button>
+							<Button
+								className="w-full"
+								variant="link"
+								onClick={() => onClickMenu("/chat/select")}
+							>
+								채팅방 관리
+							</Button>
+							<Button
+								className="w-full"
+								variant="link"
+								onClick={() => onClickMenu("/chat/send")}
+							>
+								메세지 전송
+							</Button>
+							<Button
+								className="w-full"
+								variant="link"
+								onClick={() => onClickMenu("/chat/logs")}
+							>
+								메세지 로그 확인
+							</Button>
 							<Separator className="my-1 bg-gray-200" />
 							<p className="font-bold text-center mt-3 mb-2">회원/권한 관리</p>
 							<Button
