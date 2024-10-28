@@ -9,7 +9,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField } from "@/components/ui/form";
 import { ChatSchema } from "@/lib/schema/chat/chat.schema";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createChatbotApi } from "@/lib/api/chatbot-api";
 import SsshFormItem from "../common/sssh-form-item";
 import { createChatApi } from "@/lib/api/chat-api";
 import {

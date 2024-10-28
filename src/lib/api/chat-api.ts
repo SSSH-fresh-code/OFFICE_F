@@ -1,4 +1,9 @@
-import type { MessengerType, Page, ReadChatDto } from "sssh-library";
+import type {
+	MessengerType,
+	Page,
+	ReadChatDto,
+	SendResultDto,
+} from "sssh-library";
 import { req } from "../api";
 
 /**
@@ -101,3 +106,13 @@ export const readChatKey = (id: number) => ["chat", "single", id];
  */
 export const readChatApi = (id: number) =>
 	req<ReadChatDto>(`chat/${id}`, "get");
+
+/**
+ * 메세지 전송 API - Post /chat/bot/send
+ *
+ * 메세지를 전송하는 API를 요청합니다.
+ *
+ * @param {object} body - 채팅방id, 챗id, 메세지
+ */
+export const sendChatApi = (body: object) =>
+	req<SendResultDto>("chat/bot/send", "post", body);
