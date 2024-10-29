@@ -1,4 +1,4 @@
-import type { MessengerType, ReadChatDto } from "sssh-library";
+import { MessengerType, ReadChatBotDto, ReadChatDto } from "sssh-library";
 import {
 	queryOptions,
 	useMutation,
@@ -36,33 +36,17 @@ function ChatSendForm() {
 	if (!data) return <></>;
 
 	const bots = data.data;
-	const [type, setType] = useState<MessengerType>();
+	const [botsByType, setBotsByType] = useState<ReadChatBotDto[]>(
+		bots.filter((b) => b.type === MessengerType.DISCORD),
+	);
 	const [chats, setChats] = useState<ReadChatDto[]>();
-
-	useEffect(() => {
-		if (type) {
-			const option = queryOptions({
-				queryKey: readChatAllByTypeKey(type),
-				queryFn: async () => await readChatAllByTypeApi(type),
-			});
-
-			queryClient
-				.fetchQuery(option)
-				.then((i) => setChats(i.data?.data))
-				.catch(() => setChats([]));
-		} else {
-			setChats(undefined);
-		}
-	}, [type]);
-
-	const queryClient = useQueryClient();
 
 	const form = useForm<z.infer<typeof ChatSendSchema>>({
 		resolver: zodResolver(ChatSendSchema),
-		defaultValues: {
+		values: {
 			botId: "",
 			chatId: "",
-			userId: user?.id,
+			userId: user?.id as string,
 			message: "",
 		},
 	});
@@ -72,7 +56,7 @@ function ChatSendForm() {
 		onSuccess: async (result) => {
 			if (result.success && result.data) {
 				alert("메세지를 정상적으로 보냈습니다!");
-				form.reset();
+				form.resetField("message");
 			}
 		},
 	});
@@ -95,11 +79,17 @@ function ChatSendForm() {
 		}
 	}
 
-	function changeType(id: string) {
-		const bot = bots.find((b) => b.id === Number(id));
+	function changeType(t: MessengerType) {
+		setBotsByType(bots.filter((b) => b.type === t));
+	}
 
-		if (bot) {
-			setType(bot.type);
+	function changeBot(i: string) {
+		if (botsByType) {
+			const id = Number(i);
+			const bot = botsByType.find((b) => b.id === id);
+			if (bot) {
+				setChats(bot.chats);
+			}
 		}
 	}
 
@@ -117,6 +107,32 @@ function ChatSendForm() {
 							onSubmit={form.handleSubmit(onSubmit)}
 							className="w-[480px] space-y-5 flex-col flex justify-center h-full"
 						>
+							<SsshFormItem label="챗봇">
+								<Select
+									onValueChange={(e) => {
+										form.resetField("chatId");
+										changeType(e as MessengerType);
+									}}
+									defaultValue={MessengerType.DISCORD}
+								>
+									<FormControl>
+										<SelectTrigger>
+											<SelectValue placeholder="타입을 선택해주세요" />
+										</SelectTrigger>
+									</FormControl>
+									<SelectContent className="bg-white">
+										{Object.keys(MessengerType).map((d) => (
+											<SelectItem
+												value={String(d)}
+												key={`select-type-${d}`}
+												className="cursor-pointer hover:bg-gray-100"
+											>
+												{d}
+											</SelectItem>
+										))}
+									</SelectContent>
+								</Select>
+							</SsshFormItem>
 							<FormField
 								control={form.control}
 								name="botId"
@@ -126,7 +142,7 @@ function ChatSendForm() {
 											onValueChange={(e) => {
 												form.resetField("chatId");
 												field.onChange(e);
-												changeType(e);
+												changeBot(e);
 											}}
 											defaultValue={field.value}
 										>
@@ -136,7 +152,7 @@ function ChatSendForm() {
 												</SelectTrigger>
 											</FormControl>
 											<SelectContent className="bg-white">
-												{bots.map((b) => (
+												{botsByType?.map((b) => (
 													<SelectItem
 														value={String(b.id)}
 														key={`select-bot-${b.id}`}

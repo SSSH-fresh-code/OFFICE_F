@@ -47,7 +47,7 @@ export async function req<T>(
 				useUserStore.getState().logout();
 			} else if (403 === errorJson.statusCode) {
 				location.href = "/";
-			} else {
+			} else if (400 !== errorJson.statusCode) {
 				window.history.back();
 			}
 
