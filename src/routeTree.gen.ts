@@ -33,132 +33,170 @@ import { Route as ChatbotIdIndexRouteImport } from './routes/chatbot/$id/index.r
 import { Route as ChatSendIndexRouteImport } from './routes/chat/send/index.route'
 import { Route as ChatSelectIndexRouteImport } from './routes/chat/select/index.route'
 import { Route as ChatNewIndexRouteImport } from './routes/chat/new/index.route'
+import { Route as ChatLogIndexRouteImport } from './routes/chat/log/index.route'
 import { Route as ChatIdIndexRouteImport } from './routes/chat/$id/index.route'
 import { Route as UserIdPermissionIndexRouteImport } from './routes/user/$id/permission/index.route'
+import { Route as ChatLogIdIndexRouteImport } from './routes/chat/log/$id/index.route'
 
 // Create/Update Routes
 
 const IndexRouteRoute = IndexRouteImport.update({
+  id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
 } as any)
 
 const UserIndexRouteRoute = UserIndexRouteImport.update({
+  id: '/user/',
   path: '/user/',
   getParentRoute: () => rootRoute,
 } as any)
 
 const TopicIndexRouteRoute = TopicIndexRouteImport.update({
+  id: '/topic/',
   path: '/topic/',
   getParentRoute: () => rootRoute,
 } as any)
 
 const SeriesIndexRouteRoute = SeriesIndexRouteImport.update({
+  id: '/series/',
   path: '/series/',
   getParentRoute: () => rootRoute,
 } as any)
 
 const PostIndexRouteRoute = PostIndexRouteImport.update({
+  id: '/post/',
   path: '/post/',
   getParentRoute: () => rootRoute,
 } as any)
 
 const PermissionIndexRouteRoute = PermissionIndexRouteImport.update({
+  id: '/permission/',
   path: '/permission/',
   getParentRoute: () => rootRoute,
 } as any)
 
 const ChatbotIndexRouteRoute = ChatbotIndexRouteImport.update({
+  id: '/chatbot/',
   path: '/chatbot/',
   getParentRoute: () => rootRoute,
 } as any)
 
 const ChatIndexRouteRoute = ChatIndexRouteImport.update({
+  id: '/chat/',
   path: '/chat/',
   getParentRoute: () => rootRoute,
 } as any)
 
 const UserIdIndexRouteRoute = UserIdIndexRouteImport.update({
+  id: '/user/$id/',
   path: '/user/$id/',
   getParentRoute: () => rootRoute,
 } as any)
 
 const TopicNewIndexRouteRoute = TopicNewIndexRouteImport.update({
+  id: '/topic/new/',
   path: '/topic/new/',
   getParentRoute: () => rootRoute,
 } as any)
 
 const TopicNameIndexRouteRoute = TopicNameIndexRouteImport.update({
+  id: '/topic/$name/',
   path: '/topic/$name/',
   getParentRoute: () => rootRoute,
 } as any)
 
 const SeriesNewIndexRouteRoute = SeriesNewIndexRouteImport.update({
+  id: '/series/new/',
   path: '/series/new/',
   getParentRoute: () => rootRoute,
 } as any)
 
 const SeriesNameIndexRouteRoute = SeriesNameIndexRouteImport.update({
+  id: '/series/$name/',
   path: '/series/$name/',
   getParentRoute: () => rootRoute,
 } as any)
 
 const PostNewIndexRouteRoute = PostNewIndexRouteImport.update({
+  id: '/post/new/',
   path: '/post/new/',
   getParentRoute: () => rootRoute,
 } as any)
 
 const PostTitleIndexRouteRoute = PostTitleIndexRouteImport.update({
+  id: '/post/$title/',
   path: '/post/$title/',
   getParentRoute: () => rootRoute,
 } as any)
 
 const PermissionNewIndexRouteRoute = PermissionNewIndexRouteImport.update({
+  id: '/permission/new/',
   path: '/permission/new/',
   getParentRoute: () => rootRoute,
 } as any)
 
 const PermissionNameIndexRouteRoute = PermissionNameIndexRouteImport.update({
+  id: '/permission/$name/',
   path: '/permission/$name/',
   getParentRoute: () => rootRoute,
 } as any)
 
 const ChatbotNewIndexRouteRoute = ChatbotNewIndexRouteImport.update({
+  id: '/chatbot/new/',
   path: '/chatbot/new/',
   getParentRoute: () => rootRoute,
 } as any)
 
 const ChatbotIdIndexRouteRoute = ChatbotIdIndexRouteImport.update({
+  id: '/chatbot/$id/',
   path: '/chatbot/$id/',
   getParentRoute: () => rootRoute,
 } as any)
 
 const ChatSendIndexRouteRoute = ChatSendIndexRouteImport.update({
+  id: '/chat/send/',
   path: '/chat/send/',
   getParentRoute: () => rootRoute,
 } as any)
 
 const ChatSelectIndexRouteRoute = ChatSelectIndexRouteImport.update({
+  id: '/chat/select/',
   path: '/chat/select/',
   getParentRoute: () => rootRoute,
 } as any)
 
 const ChatNewIndexRouteRoute = ChatNewIndexRouteImport.update({
+  id: '/chat/new/',
   path: '/chat/new/',
   getParentRoute: () => rootRoute,
 } as any)
 
+const ChatLogIndexRouteRoute = ChatLogIndexRouteImport.update({
+  id: '/chat/log/',
+  path: '/chat/log/',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const ChatIdIndexRouteRoute = ChatIdIndexRouteImport.update({
+  id: '/chat/$id/',
   path: '/chat/$id/',
   getParentRoute: () => rootRoute,
 } as any)
 
 const UserIdPermissionIndexRouteRoute = UserIdPermissionIndexRouteImport.update(
   {
+    id: '/user/$id/permission/',
     path: '/user/$id/permission/',
     getParentRoute: () => rootRoute,
   } as any,
 )
+
+const ChatLogIdIndexRouteRoute = ChatLogIdIndexRouteImport.update({
+  id: '/chat/log/$id/',
+  path: '/chat/log/$id/',
+  getParentRoute: () => rootRoute,
+} as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -225,6 +263,13 @@ declare module '@tanstack/react-router' {
       path: '/chat/$id'
       fullPath: '/chat/$id'
       preLoaderRoute: typeof ChatIdIndexRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/chat/log/': {
+      id: '/chat/log/'
+      path: '/chat/log'
+      fullPath: '/chat/log'
+      preLoaderRoute: typeof ChatLogIndexRouteImport
       parentRoute: typeof rootRoute
     }
     '/chat/new/': {
@@ -325,6 +370,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UserIdIndexRouteImport
       parentRoute: typeof rootRoute
     }
+    '/chat/log/$id/': {
+      id: '/chat/log/$id/'
+      path: '/chat/log/$id'
+      fullPath: '/chat/log/$id'
+      preLoaderRoute: typeof ChatLogIdIndexRouteImport
+      parentRoute: typeof rootRoute
+    }
     '/user/$id/permission/': {
       id: '/user/$id/permission/'
       path: '/user/$id/permission'
@@ -347,6 +399,7 @@ export interface FileRoutesByFullPath {
   '/topic': typeof TopicIndexRouteRoute
   '/user': typeof UserIndexRouteRoute
   '/chat/$id': typeof ChatIdIndexRouteRoute
+  '/chat/log': typeof ChatLogIndexRouteRoute
   '/chat/new': typeof ChatNewIndexRouteRoute
   '/chat/select': typeof ChatSelectIndexRouteRoute
   '/chat/send': typeof ChatSendIndexRouteRoute
@@ -361,6 +414,7 @@ export interface FileRoutesByFullPath {
   '/topic/$name': typeof TopicNameIndexRouteRoute
   '/topic/new': typeof TopicNewIndexRouteRoute
   '/user/$id': typeof UserIdIndexRouteRoute
+  '/chat/log/$id': typeof ChatLogIdIndexRouteRoute
   '/user/$id/permission': typeof UserIdPermissionIndexRouteRoute
 }
 
@@ -374,6 +428,7 @@ export interface FileRoutesByTo {
   '/topic': typeof TopicIndexRouteRoute
   '/user': typeof UserIndexRouteRoute
   '/chat/$id': typeof ChatIdIndexRouteRoute
+  '/chat/log': typeof ChatLogIndexRouteRoute
   '/chat/new': typeof ChatNewIndexRouteRoute
   '/chat/select': typeof ChatSelectIndexRouteRoute
   '/chat/send': typeof ChatSendIndexRouteRoute
@@ -388,6 +443,7 @@ export interface FileRoutesByTo {
   '/topic/$name': typeof TopicNameIndexRouteRoute
   '/topic/new': typeof TopicNewIndexRouteRoute
   '/user/$id': typeof UserIdIndexRouteRoute
+  '/chat/log/$id': typeof ChatLogIdIndexRouteRoute
   '/user/$id/permission': typeof UserIdPermissionIndexRouteRoute
 }
 
@@ -402,6 +458,7 @@ export interface FileRoutesById {
   '/topic/': typeof TopicIndexRouteRoute
   '/user/': typeof UserIndexRouteRoute
   '/chat/$id/': typeof ChatIdIndexRouteRoute
+  '/chat/log/': typeof ChatLogIndexRouteRoute
   '/chat/new/': typeof ChatNewIndexRouteRoute
   '/chat/select/': typeof ChatSelectIndexRouteRoute
   '/chat/send/': typeof ChatSendIndexRouteRoute
@@ -416,6 +473,7 @@ export interface FileRoutesById {
   '/topic/$name/': typeof TopicNameIndexRouteRoute
   '/topic/new/': typeof TopicNewIndexRouteRoute
   '/user/$id/': typeof UserIdIndexRouteRoute
+  '/chat/log/$id/': typeof ChatLogIdIndexRouteRoute
   '/user/$id/permission/': typeof UserIdPermissionIndexRouteRoute
 }
 
@@ -431,6 +489,7 @@ export interface FileRouteTypes {
     | '/topic'
     | '/user'
     | '/chat/$id'
+    | '/chat/log'
     | '/chat/new'
     | '/chat/select'
     | '/chat/send'
@@ -445,6 +504,7 @@ export interface FileRouteTypes {
     | '/topic/$name'
     | '/topic/new'
     | '/user/$id'
+    | '/chat/log/$id'
     | '/user/$id/permission'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -457,6 +517,7 @@ export interface FileRouteTypes {
     | '/topic'
     | '/user'
     | '/chat/$id'
+    | '/chat/log'
     | '/chat/new'
     | '/chat/select'
     | '/chat/send'
@@ -471,6 +532,7 @@ export interface FileRouteTypes {
     | '/topic/$name'
     | '/topic/new'
     | '/user/$id'
+    | '/chat/log/$id'
     | '/user/$id/permission'
   id:
     | '__root__'
@@ -483,6 +545,7 @@ export interface FileRouteTypes {
     | '/topic/'
     | '/user/'
     | '/chat/$id/'
+    | '/chat/log/'
     | '/chat/new/'
     | '/chat/select/'
     | '/chat/send/'
@@ -497,6 +560,7 @@ export interface FileRouteTypes {
     | '/topic/$name/'
     | '/topic/new/'
     | '/user/$id/'
+    | '/chat/log/$id/'
     | '/user/$id/permission/'
   fileRoutesById: FileRoutesById
 }
@@ -511,6 +575,7 @@ export interface RootRouteChildren {
   TopicIndexRouteRoute: typeof TopicIndexRouteRoute
   UserIndexRouteRoute: typeof UserIndexRouteRoute
   ChatIdIndexRouteRoute: typeof ChatIdIndexRouteRoute
+  ChatLogIndexRouteRoute: typeof ChatLogIndexRouteRoute
   ChatNewIndexRouteRoute: typeof ChatNewIndexRouteRoute
   ChatSelectIndexRouteRoute: typeof ChatSelectIndexRouteRoute
   ChatSendIndexRouteRoute: typeof ChatSendIndexRouteRoute
@@ -525,6 +590,7 @@ export interface RootRouteChildren {
   TopicNameIndexRouteRoute: typeof TopicNameIndexRouteRoute
   TopicNewIndexRouteRoute: typeof TopicNewIndexRouteRoute
   UserIdIndexRouteRoute: typeof UserIdIndexRouteRoute
+  ChatLogIdIndexRouteRoute: typeof ChatLogIdIndexRouteRoute
   UserIdPermissionIndexRouteRoute: typeof UserIdPermissionIndexRouteRoute
 }
 
@@ -538,6 +604,7 @@ const rootRouteChildren: RootRouteChildren = {
   TopicIndexRouteRoute: TopicIndexRouteRoute,
   UserIndexRouteRoute: UserIndexRouteRoute,
   ChatIdIndexRouteRoute: ChatIdIndexRouteRoute,
+  ChatLogIndexRouteRoute: ChatLogIndexRouteRoute,
   ChatNewIndexRouteRoute: ChatNewIndexRouteRoute,
   ChatSelectIndexRouteRoute: ChatSelectIndexRouteRoute,
   ChatSendIndexRouteRoute: ChatSendIndexRouteRoute,
@@ -552,6 +619,7 @@ const rootRouteChildren: RootRouteChildren = {
   TopicNameIndexRouteRoute: TopicNameIndexRouteRoute,
   TopicNewIndexRouteRoute: TopicNewIndexRouteRoute,
   UserIdIndexRouteRoute: UserIdIndexRouteRoute,
+  ChatLogIdIndexRouteRoute: ChatLogIdIndexRouteRoute,
   UserIdPermissionIndexRouteRoute: UserIdPermissionIndexRouteRoute,
 }
 
@@ -576,6 +644,7 @@ export const routeTree = rootRoute
         "/topic/",
         "/user/",
         "/chat/$id/",
+        "/chat/log/",
         "/chat/new/",
         "/chat/select/",
         "/chat/send/",
@@ -590,6 +659,7 @@ export const routeTree = rootRoute
         "/topic/$name/",
         "/topic/new/",
         "/user/$id/",
+        "/chat/log/$id/",
         "/user/$id/permission/"
       ]
     },
@@ -619,6 +689,9 @@ export const routeTree = rootRoute
     },
     "/chat/$id/": {
       "filePath": "chat/$id/index.route.tsx"
+    },
+    "/chat/log/": {
+      "filePath": "chat/log/index.route.tsx"
     },
     "/chat/new/": {
       "filePath": "chat/new/index.route.tsx"
@@ -661,6 +734,9 @@ export const routeTree = rootRoute
     },
     "/user/$id/": {
       "filePath": "user/$id/index.route.tsx"
+    },
+    "/chat/log/$id/": {
+      "filePath": "chat/log/$id/index.route.tsx"
     },
     "/user/$id/permission/": {
       "filePath": "user/$id/permission/index.route.tsx"

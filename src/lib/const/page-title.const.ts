@@ -14,6 +14,7 @@ export const PAGE_TITLE = {
 	"/permission": "권한 목록",
 	"/chatbot": "챗봇 목록",
 	"/chat": "채팅방 목록",
+	"/chat/log": "메세지 로그",
 } as const;
 
 export default PAGE_TITLE;

@@ -1,15 +1,7 @@
 import { MessengerType, ReadChatBotDto, ReadChatDto } from "sssh-library";
-import {
-	queryOptions,
-	useMutation,
-	useQueryClient,
-} from "@tanstack/react-query";
-import {
-	readChatAllByTypeApi,
-	readChatAllByTypeKey,
-	sendChatApi,
-} from "@/lib/api/chat-api";
-import { useEffect, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { sendChatApi } from "@/lib/api/chat-api";
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import SsshFormItem from "../common/sssh-form-item";

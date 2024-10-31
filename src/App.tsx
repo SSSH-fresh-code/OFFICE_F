@@ -70,7 +70,7 @@ function App() {
 							<Button
 								className="w-full"
 								variant="link"
-								onClick={() => onClickMenu("/chat/logs")}
+								onClick={() => onClickMenu("/chat/log")}
 							>
 								메세지 로그 확인
 							</Button>
