@@ -117,7 +117,10 @@ function App() {
 							<Button
 								className="w-full"
 								variant="link"
-								onClick={() => logout()}
+								onClick={() => {
+									logout();
+									location.href = "/login";
+								}}
 							>
 								로그아웃
 							</Button>
