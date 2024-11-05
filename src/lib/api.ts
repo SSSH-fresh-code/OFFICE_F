@@ -43,8 +43,8 @@ export async function req<T>(
 			const errorJson = await error.response.json();
 
 			if (401 === errorJson.statusCode) {
-				location.href = "/";
 				useUserStore.getState().logout();
+				location.href = "/login";
 			} else if (403 === errorJson.statusCode) {
 				location.href = "/";
 			} else if (400 !== errorJson.statusCode) {

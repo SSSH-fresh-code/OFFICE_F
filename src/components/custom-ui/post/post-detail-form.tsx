@@ -47,7 +47,6 @@ function PostDetailForm() {
 	>(series?.data ? series.data : []);
 
 	useEffect(() => {
-		const queryClient = useQueryClient();
 		if (topicId) {
 			const seriesQueryOptions = queryOptions({
 				queryKey: ["optionForSelect", topicId],
@@ -70,6 +69,7 @@ function PostDetailForm() {
 		}
 	}, [topicId]);
 
+	const queryClient = useQueryClient();
 	const form = useForm<z.infer<typeof PostSchema>>({
 		resolver: zodResolver(PostSchema),
 		defaultValues: {

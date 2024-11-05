@@ -1,20 +1,23 @@
-import type { QueryClient } from "@tanstack/react-query";
-import { createRootRouteWithContext } from "@tanstack/react-router";
 import useUserStore from "@/lib/store/user.store";
+import type { QueryClient } from "@tanstack/react-query";
+import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
 import { lazy } from "react";
 
-const GuestApp = lazy(() => import("@/components/guest/guest-app"));
 const App = lazy(() => import("@/App"));
 
 export const Route = createRootRouteWithContext<{
 	queryClient: QueryClient;
 }>()({
-	component: Root,
+	component: () => {
+		const { user } = useUserStore();
+
+		return user ? (
+			<App />
+		) : (
+			<>
+				<Outlet />
+			</>
+		);
+	},
 	preloadStaleTime: 0,
 });
-
-function Root() {
-	const { user, login } = useUserStore();
-
-	return user ? <App /> : <GuestApp login={login} />;
-}

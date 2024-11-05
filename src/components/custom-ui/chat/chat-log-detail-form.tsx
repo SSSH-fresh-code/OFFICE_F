@@ -4,13 +4,10 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "@tanstack/react-router";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Route } from "@/routes/chat/log/$id/index.route";
-import { FormItem, FormLabel } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
-import { cn } from "@/lib/utils";
-import { error } from "console";
 import { Textarea } from "@/components/ui/textarea";
 
-type ChatLog = {
+export type ChatLog = {
 	bot: ReadChatBotDto;
 	chat: ReadChatDto;
 	user: ReadUserDto;
