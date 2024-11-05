@@ -17,7 +17,7 @@ function MainPage() {
 
 	return (
 		<div className="w-full grid grid-cols-1 md:grid-cols-2 gap-3">
-			{boxes.length < 0 ? (
+			{boxes.length > 0 ? (
 				boxes.map((b) => b)
 			) : (
 				<Card className="col-span-2 h-64 flex flex-col justify-center items-center md:py-15">

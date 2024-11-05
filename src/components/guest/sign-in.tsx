@@ -39,7 +39,6 @@ function SignIn({ login, changeMode }: LoginProps) {
 
 		if (loginResult.success && loginResult.data) {
 			login(loginResult.data);
-			location.href = "/";
 		}
 	}
 

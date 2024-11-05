@@ -8,10 +8,7 @@ export const Route = createFileRoute("/login/")({
 	component: () => {
 		const { user, login } = useUserStore();
 
-		if (user) {
-			alert("이미 로그인된 상태입니다!");
-			location.href = "/";
-		}
+		if (user) location.href = "/";
 
 		return <GuestApp login={login} />;
 	},
