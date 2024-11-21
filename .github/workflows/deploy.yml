@@ -14,26 +14,38 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Enable verbose logging
-      run: |
-        set -x
-    - name: Checkout code
+    - name: 체크아웃
       uses: actions/checkout@v3
 
-    - name: Set up SSH for deployment
-      uses: webfactory/ssh-agent@v0.5.4
-      with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+    - name: 환경 파일 만들기
+      run: |
+        echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" > .env
 
-    - name: Create SSH directory and set permissions
+    - name: 프로젝트 빌드
       run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-    - name: Add known hosts (to avoid host key verification)
-      run: |
-        ssh-keyscan -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_IP }} >> ~/.ssh/known_hosts
-        
-    - name: Deploy to server
-      run: |
-        ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }} 'cd ~/OFFICE_F && zsh /scripts/office/build_push.sh'
+        curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+        sudo apt-get install -y nodejs
+        corepack enable
+        corepack prepare pnpm@latest --activate
+        pnpm install
+        pnpm run build
+    
+    - name: scp 전송
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ secrets.SSH_IP }}
+        username: ${{ secrets.SSH_USER }}
+        port: ${{ secrets.SSH_PORT }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        source: dist/ 
+        target: /var/www/html/temp_build/
+
+    - name: script 실행
+      uses: appleboy/ssh-action@v0.1.6
+      with:
+        host: ${{ secrets.SSH_IP }}
+        username: ${{ secrets.SSH_USER }}
+        port: ${{ secrets.SSH_PORT }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          zsh /scripts/front/build_push.sh
