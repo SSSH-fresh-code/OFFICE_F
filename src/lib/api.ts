@@ -45,13 +45,15 @@ export async function req<T>(
 			if (401 === errorJson.statusCode) {
 				useUserStore.getState().logout();
 				location.href = "/login";
-			} else if (403 === errorJson.statusCode) {
-				location.href = "/";
-			} else if (400 !== errorJson.statusCode) {
-				window.history.back();
-			}
+			} else {
+				if (403 === errorJson.statusCode) {
+					location.href = "/";
+				} else if (400 !== errorJson.statusCode) {
+					window.history.back();
+				}
 
-			alert(errorJson.message);
+				alert(errorJson.message);
+			}
 		}
 	}
 
