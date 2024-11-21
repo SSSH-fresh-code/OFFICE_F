@@ -48,4 +48,4 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
-          zsh /scripts/front/build_push.sh
+          zsh /scripts/office/build_push.sh
